@@ -12,5 +12,5 @@ https://github.com/ethereumbook/ethereumbook
 3)Official Ethereum white paper:
 https://github.com/ethereum/wiki/wiki/White-Paper
 
-4) Official Ethereum yellow paper:
+4)Official Ethereum yellow paper:
 https://ethereum.github.io/yellowpaper/paper.pdf
