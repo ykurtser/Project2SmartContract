@@ -21,6 +21,9 @@
 6)upgradeability-using-unstructured-storage -
 >https://blog.zeppelinos.org/upgradeability-using-unstructured-storage/    
 
+7)testing with truffle docs:
+>http://truffleframework.com/docs/getting_started/testing
+
 ## Tools etc
 
 1)Truffle Framework - documentation and tutorials:
