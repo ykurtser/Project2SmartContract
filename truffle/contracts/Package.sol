@@ -73,12 +73,17 @@ contract Package {
     // will not take the new stage into account.
     modifier timedTransitions() {
         if (state == State.WaitingForStakesIn && now >= creationTime + waitingForStakesInTO)
-        {}
-            //todo: terminate
+        {
+          terminateNotShipped();
+        }
         else if (state == State.Shipped &&  now >= creationTime + arrivalTO)
-        {}    //todo: terminate
+          {
+          terminateLost();
+          }
         else if (state == State.Returned &&  now >= creationTime + 2*arrivalTO)
-            //todo: terminate
+          {
+              terminateOnReturn();
+          }
         _;
     }
 
@@ -137,6 +142,31 @@ contract Package {
  }
  function terminateReturned() private atState(State.Returned){
    carrier.transfer(merchValue+3*shippingFee);
+   selfdestruct(packageManger);
+ }
+
+ function terminateNotShipped() private atState(State.WaitingForStakesIn){
+   if (ammountCarrier>0)
+   {
+      carrier.transfer(ammountCarrier);
+   }
+   if (ammountBuyer>0)
+   {
+      buyer.transfer(ammountBuyer);
+   }
+   if (ammountSeller>0)
+   {
+      buyer.transfer(ammountSeller);
+   }
+   selfdestruct(packageManger);
+ }
+ function terminateLost() private atState(State.Shipped){
+   buyer.transfer(ammountBuyer);
+   seller.transfer(ammountCarrier+ammountSeller);
+   selfdestruct(packageManger);
+ }
+ function terminateOnReturn() private atState(State.Returned){
+   seller.transfer(ammountCarrier+ammountSeller);
    selfdestruct(packageManger);
  }
 
