@@ -9,7 +9,7 @@ contract Package {
 	address carrier;
 	address buyer;
 	address disputeResolver;
-  address packageManger;
+    address packageManger;
 	uint merchValue; //todo resolve type if int256 is too big or can do float
 	uint shippingFee;
 	uint ammountBuyer;
@@ -18,10 +18,11 @@ contract Package {
 	uint creationTime;
 	uint arrivalTO;
 	uint waitingForStakesInTO ;
-	string trajectory;
+	string[] trajectory;
+	uint numOfSig; //number of stations allong pakage route
 
 	// Contract constructor: set owner
-	 constructor(address PkgCreator,address Seller,address Carrier,address Buyer,address DisputeResolver,uint256 MerchValue,uint256 ShippingFee, uint ArrivalTO, uint WaitingForStakesInTO) payable
+	 constructor(address PkgCreator,address Seller,address Carrier,address Buyer,address DisputeResolver,uint256 MerchValue,uint256 ShippingFee, uint ArrivalTO, uint WaitingForStakesInTO) public payable
 	{
 	    seller = Seller;
 	    buyer = Buyer;
@@ -33,11 +34,12 @@ contract Package {
 	    ammountBuyer = 0;
 	    ammountCarrier = 0;
 	    ammountSeller = 0;
+	    numOfSig = 0;
 	    state = State.WaitingForStakesIn;
 	    creationTime = now;
 	    arrivalTO = ArrivalTO;
 	    waitingForStakesInTO = WaitingForStakesInTO;
-	    trajectory = new string; // check how to keep trajectory
+	    trajectory = new string[](1000); // check how to keep trajectory
 
 
 	    //check if creator paid and update
@@ -45,7 +47,7 @@ contract Package {
 
 
 	}
-  function resolvePayment(address payer)
+  function resolvePayment(address payer) private
   {
     if (payer == buyer)
     {
@@ -80,7 +82,7 @@ contract Package {
         _;
     }
 
-    function changeState()
+    function changeState() private
     {
         state = State(uint(state) + 1);
     }
@@ -99,12 +101,14 @@ contract Package {
 	    if (msg.sender == seller)
 	        terminateReturned();
 	   // if signer is carrier just update trajectory
-	    trajectory = location; //todo: manage history of trajectory in array of strings
+	    trajectory[numOfSig] = location;
+	    numOfSig++;
 	}
 
 	function returnPackage(string reason) public atState(State.Shipped){
 	    require(msg.sender == buyer);
-	    trajectory = reason; //todo: manage history of trajectory in array of strings
+	    trajectory[numOfSig]  = reason; //todo: manage history of trajectory in array of strings
+	    numOfSig++;
 	    changeState();
 	    buyer.transfer(merchValue);
 	    ammountBuyer-=merchValue;
@@ -118,22 +122,22 @@ contract Package {
     //todo: think of what message we actualy send  to disputeResolver
 
   }
- function resolveDispute(ufixed sellersCut) public atState(State.UnderDispute){
+ function resolveDispute(uint sellersCut) public atState(State.UnderDispute){
    require(msg.sender == disputeResolver);
-   buyer.transfer(uint((merchValue + 2*shippingFee)*sellersCut));
-   buyer.transfer(uint((merchValue + 2*shippingFee)*(1-sellersCut)));
+   buyer.transfer(uint((merchValue + 2*shippingFee)*sellersCut/100));
+   buyer.transfer(uint((merchValue + 2*shippingFee)*(1-sellersCut)/100));
    selfdestruct(packageManger);
 
  }
 
- function terminateNormal() atState(State.Shipped){
-   seller.transfer(merchValue+shippingFee)
-   carrier.transfer(merchValue+2*shippingFee)
-   selfdestruct(packageManger)
+ function terminateNormal() private atState(State.Shipped){
+   seller.transfer(merchValue+shippingFee);
+   carrier.transfer(merchValue+2*shippingFee);
+   selfdestruct(packageManger);
  }
- function terminateReturned() atState(State.returned){
-   carrier.transfer(merchValue+3*shippingFee)
-   selfdestruct(packageManger)
+ function terminateReturned() private atState(State.Returned){
+   carrier.transfer(merchValue+3*shippingFee);
+   selfdestruct(packageManger);
  }
 
 
