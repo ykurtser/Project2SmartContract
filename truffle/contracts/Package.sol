@@ -3,17 +3,18 @@ pragma solidity ^0.4.23;
 
 // Our first contract is a faucet!
 contract Package {
-    enum State {WaitingForStakesIn, Shipped, Returned, UnderDispute}
-    State public state;
+  enum State {WaitingForStakesIn, Shipped, Returned, UnderDispute}
+  State public state;
 	address seller;
 	address carrier;
 	address buyer;
 	address disputeResolver;
-	uint256 merchValue; //todo resolve type if int256 is too big or can do float
-	uint256 shippingFee;
-	uint256 ammountBuyer;
-	uint256 ammountCarrier;
-	uint256 ammountSeller;
+  address packageManger;
+	uint merchValue; //todo resolve type if int256 is too big or can do float
+	uint shippingFee;
+	uint ammountBuyer;
+	uint ammountCarrier;
+	uint ammountSeller;
 	uint creationTime;
 	uint arrivalTO;
 	uint waitingForStakesInTO ;
@@ -25,6 +26,7 @@ contract Package {
 	    seller = Seller;
 	    buyer = Buyer;
 	    carrier = Carrier;
+      packageManger = msg.sender;
 	    disputeResolver = DisputeResolver;
 	    merchValue = MerchValue;
 	    shippingFee = ShippingFee;
@@ -39,21 +41,26 @@ contract Package {
 
 
 	    //check if creator paid and update
-	    if (PkgCreator == buyer)
-	    {
-	        ammountBuyer=msg.value;
-	    }
-	    else if (PkgCreator == seller)
-	    {
-	        ammountSeller=msg.value;
-	    }
-	    else if (PkgCreator == carrier)
-	    {
-	        ammountCarrier=msg.value;
-	    }
+      resolvePayment(PkgCreator);
 
 
 	}
+  function resolvePayment(address payer)
+  {
+    if (payer == buyer)
+    {
+        ammountBuyer=msg.value;
+    }
+    else if (payer == seller)
+    {
+        ammountSeller=msg.value;
+    }
+    else if (payer == carrier)
+    {
+        ammountCarrier=msg.value;
+    }
+
+  }
     modifier atState(State _state) {
         require(state == _state);
         _;
@@ -79,18 +86,7 @@ contract Package {
     }
 	//pay to contract, check who paid, update amount paid then change state
 	function () public payable timedTransitions() {
-	    if (msg.sender == buyer)
-	    {
-	        ammountBuyer=ammountBuyer+msg.value;
-	    }
-	    else if (msg.sender == seller)
-	    {
-	        ammountSeller=ammountSeller+msg.value;
-	    }
-	    else if (msg.sender == carrier)
-	    {
-	        ammountCarrier = ammountCarrier+msg.value;
-	    }
+	    resolvePayment(msg.sender);
 	    //check if everybody paid, package ready for shipping
 	    if (ammountBuyer >= merchValue+shippingFee && ammountSeller >= 2*shippingFee && ammountCarrier >= merchValue+shippingFee && state == State.WaitingForStakesIn)
 	        changeState();
@@ -115,6 +111,30 @@ contract Package {
 	    carrier.transfer(shippingFee);
 	    ammountCarrier-=shippingFee;
 	}
+
+  function openDispute() public atState(State.Returned) {
+    require(msg.sender == carrier);
+    changeState();
+    //todo: think of what message we actualy send  to disputeResolver
+
+  }
+ function resolveDispute(ufixed sellersCut) public atState(State.UnderDispute){
+   require(msg.sender == disputeResolver);
+   buyer.transfer(uint((merchValue + 2*shippingFee)*sellersCut));
+   buyer.transfer(uint((merchValue + 2*shippingFee)*(1-sellersCut)));
+   selfdestruct(packageManger);
+
+ }
+
+ function terminateNormal() atState(State.Shipped){
+   seller.transfer(merchValue+shippingFee)
+   carrier.transfer(merchValue+2*shippingFee)
+   selfdestruct(packageManger)
+ }
+ function terminateReturned() atState(State.returned){
+   carrier.transfer(merchValue+3*shippingFee)
+   selfdestruct(packageManger)
+ }
 
 
 }
