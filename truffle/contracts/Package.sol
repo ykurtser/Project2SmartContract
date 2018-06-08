@@ -1,15 +1,15 @@
 // Version of Solidity compiler this program was written for
 pragma solidity ^0.4.23;
 
-// Our first contract is a faucet!
+
 contract Package {
   enum State {WaitingForStakesIn, Shipped, Returned, UnderDispute}
-  State public state;
+  State  state;
 	address seller;
 	address carrier;
 	address buyer;
 	address disputeResolver;
-    address packageManger;
+  address packageManger;
 	uint merchValue; //todo resolve type if int256 is too big or can do float
 	uint shippingFee;
 	uint ammountBuyer;
@@ -22,7 +22,7 @@ contract Package {
 	uint numOfSig; //number of stations allong pakage route
 
 	// Contract constructor: set owner
-	 constructor(address PkgCreator,address Seller,address Carrier,address Buyer,address DisputeResolver,uint256 MerchValue,uint256 ShippingFee, uint ArrivalTO, uint WaitingForStakesInTO) public payable
+	 constructor(address PkgCreator,address Seller,address Carrier,address Buyer,address DisputeResolver,uint MerchValue,uint ShippingFee, uint ArrivalTO, uint WaitingForStakesInTO) public payable
 	{
 	    seller = Seller;
 	    buyer = Buyer;
@@ -39,7 +39,7 @@ contract Package {
 	    creationTime = now;
 	    arrivalTO = ArrivalTO;
 	    waitingForStakesInTO = WaitingForStakesInTO;
-	    trajectory = new string[](1000); // check how to keep trajectory
+	    trajectory = new string[](100); // check how to keep trajectory
 
 
 	    //check if creator paid and update
@@ -171,4 +171,21 @@ contract Package {
  }
 
 
+}
+
+
+contract packageManager {
+  address owner;
+  modifier restricted() {
+    if (msg.sender == owner) _;
+  }
+  constructor() public {
+    owner = msg.sender;
+  }
+  function createPackage(address Seller,address Carrier,address Buyer,address DisputeResolver,uint MerchValue,uint ShippingFee, uint ArrivalTO, uint WaitingForStakesInTO)
+  public
+  returns (address)
+  {
+    return new Package(msg.sender,Seller,Carrier,Buyer,DisputeResolver,MerchValue,ShippingFee,ArrivalTO, WaitingForStakesInTO);
+  }
 }
