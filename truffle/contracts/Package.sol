@@ -9,7 +9,7 @@ contract Package {
 	address carrier;
 	address buyer;
 	address disputeResolver;
-  address packageManger;
+    address packageManger;
 	uint merchValue; //todo resolve type if int256 is too big or can do float
 	uint shippingFee;
 	uint ammountBuyer;
@@ -171,21 +171,4 @@ contract Package {
  }
 
 
-}
-
-
-contract packageManager {
-  address owner;
-  modifier restricted() {
-    if (msg.sender == owner) _;
-  }
-  constructor() public {
-    owner = msg.sender;
-  }
-  function createPackage(address Seller,address Carrier,address Buyer,address DisputeResolver,uint MerchValue,uint ShippingFee, uint ArrivalTO, uint WaitingForStakesInTO)
-  public
-  returns (address)
-  {
-    return new Package(msg.sender,Seller,Carrier,Buyer,DisputeResolver,MerchValue,ShippingFee,ArrivalTO, WaitingForStakesInTO);
-  }
 }
