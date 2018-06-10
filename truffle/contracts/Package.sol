@@ -176,7 +176,7 @@ contract Package {
 
 contract packageManager {
   address owner;
-  int test;
+  uint test;
   modifier restricted() {
     if (msg.sender == owner) _;
   }
@@ -193,11 +193,18 @@ contract packageManager {
   function get()
   public
   view
-  returns (int)
+  returns (uint)
   {
     return (test);
   }
-  function set(int val)
+  function getOwner()
+  public
+  view
+  returns (address)
+  {
+    return (owner);
+  }
+  function set(uint val)
   public
   {
     test = val;
