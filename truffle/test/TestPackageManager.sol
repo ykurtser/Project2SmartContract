@@ -6,7 +6,7 @@ import "../contracts/Package.sol";
 
 contract TestPackageManager {
   packageManager pkg = packageManager(DeployedAddresses.packageManager());
-	function testAddress() public {
+	function testVal() public {
 
   uint expected = 12;
   pkg.set(expected);
@@ -14,5 +14,9 @@ contract TestPackageManager {
   Assert.equal(uint(pkg.get()), expected, "12 should be recorded.");
   //Assert.equal((this), expectedAddress, "owners address");
 }
+function testAddress() public {
 
+  address expectedAddress=this;
+  Assert.equal(this, this, "owners address");
+}
 }
