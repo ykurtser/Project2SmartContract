@@ -1,4 +1,3 @@
-// Version of Solidity compiler this program was written for
 pragma solidity ^0.4.21;
 
 
@@ -172,41 +171,4 @@ contract Package {
 
 
 
-}
-
-contract packageManager {
-  address owner;
-  uint test;
-  modifier restricted() {
-    if (msg.sender == owner) _;
-  }
-  constructor() public {
-    owner = msg.sender;
-    test = 12;
-  }
-  function createPackage(address Seller,address Carrier,address Buyer,address DisputeResolver,uint MerchValue,uint ShippingFee, uint ArrivalTO, uint WaitingForStakesInTO)
-  public
-  returns (address)
-  {
-    return new Package(msg.sender,Seller,Carrier,Buyer,DisputeResolver,MerchValue,ShippingFee,ArrivalTO, WaitingForStakesInTO);
-  }
-  function get()
-  public
-  view
-  returns (uint)
-  {
-    return (test);
-  }
-  function getOwner()
-  public
-  view
-  returns (address)
-  {
-    return (owner);
-  }
-  function set(uint val)
-  public
-  {
-    test = val;
-  }
 }
