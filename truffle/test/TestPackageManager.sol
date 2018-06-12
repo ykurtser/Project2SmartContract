@@ -2,21 +2,14 @@ pragma solidity ^0.4.21;
 
 import "truffle/Assert.sol";
 import "truffle/DeployedAddresses.sol";
-import "../contracts/Package.sol";
+import "../contracts/PackageManager.sol";
 
 contract TestPackageManager {
-  packageManager pkg = packageManager(DeployedAddresses.packageManager());
-	function testVal() public {
+  PackageManager pkg = PackageManager(DeployedAddresses.PackageManager());
 
-  uint expected = 12;
-  pkg.set(expected);
-  //address expectedAddress=pkg.getOwner();
-  Assert.equal(uint(pkg.get()), expected, "12 should be recorded.");
-  //Assert.equal((this), expectedAddress, "owners address");
-}
 function testAddress() public {
 
-  address expectedAddress=this;
-  Assert.equal(this, this, "owners address");
+
+  Assert.equal(pkg.getOwner(), 0xd51d1b97A1Dab01E0eEd629A31B09D58E3ccB642, "owners address");
 }
 }
