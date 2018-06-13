@@ -168,6 +168,13 @@ contract Package {
    seller.transfer(ammountCarrier+ammountSeller);
    selfdestruct(packageManger);
  }
+ function getState()
+ public
+ view
+ returns(uint)
+ {
+   return uint(state);
+ }
 
 
 

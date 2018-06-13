@@ -1,13 +1,19 @@
 
 var PackageManager = artifacts.require('../contracts/PackageManager.sol');
 
-contract('PackageManager', function ([account0]) {
+contract('PackageManager', function ([account0,account1,account2,account3]) {
   it("should assert true", function(done) {
-    var packageManager = PackageManager.deployed();
-    assert.isTrue(true);
+    var isDep=PackageManager.isDeployed();
+      assert.isTrue(isDep);
+
     done();
   });
-  //it('has an owner', async function () {
-  //  assert.equal(await PackageManager.getOwner(), account0)
-//})
+  it('has an owner',  function () {
+
+    PackageManager.deployed().then(function(instance) {return instance.getOwner();}).then(function(result) {
+      assert.equal(account0,result)
+
+    })
+
+  });
 });
