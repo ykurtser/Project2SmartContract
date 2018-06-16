@@ -2,8 +2,8 @@ pragma solidity ^0.4.21;
 
 
 contract Package {
-  enum State {WaitingForStakesIn, Shipped, Returned, UnderDispute}
-  State  state;
+    enum State {WaitingForStakesIn, Shipped, Returned, UnderDispute}
+    State  state;
 	address seller;
 	address carrier;
 	address buyer;
@@ -21,7 +21,7 @@ contract Package {
 	uint numOfSig; //number of stations allong pakage route
 
 	// Contract constructor: set owner
-	 constructor(address PkgCreator,address Seller,address Carrier,address Buyer,address DisputeResolver,uint MerchValue,uint ShippingFee, uint ArrivalTO, uint WaitingForStakesInTO) public payable
+	constructor(address PkgCreator,address Seller,address Carrier,address Buyer,address DisputeResolver,uint MerchValue,uint ShippingFee, uint ArrivalTO, uint WaitingForStakesInTO) public payable
 	{
 	    seller = Seller;
 	    buyer = Buyer;
@@ -91,7 +91,7 @@ contract Package {
         state = State(uint(state) + 1);
     }
 	//pay to contract, check who paid, update amount paid then change state
-	function () public payable timedTransitions() {
+    function () public payable timedTransitions() {
 	    resolvePayment(msg.sender);
 	    //check if everybody paid, package ready for shipping
 	    if (ammountBuyer >= merchValue+shippingFee && ammountSeller >= 2*shippingFee && ammountCarrier >= merchValue+shippingFee && state == State.WaitingForStakesIn)
@@ -159,15 +159,20 @@ contract Package {
    }
    selfdestruct(packageManger);
  }
+
  function terminateLost() private atState(State.Shipped){
    buyer.transfer(ammountBuyer);
    seller.transfer(ammountCarrier+ammountSeller);
    selfdestruct(packageManger);
  }
+
  function terminateOnReturn() private atState(State.Returned){
    seller.transfer(ammountCarrier+ammountSeller);
    selfdestruct(packageManger);
  }
+
+////////// Getters ///////////
+
  function getState()
  public
  view
@@ -175,6 +180,7 @@ contract Package {
  {
    return uint(state);
  }
+
  function getBuyer()
  public
  view
@@ -182,6 +188,31 @@ contract Package {
  {
    return (buyer);
  }
+
+ function getSeller()
+ public
+ view
+ returns(address)
+ {
+   return (seller);
+ }
+
+ function getCarrier()
+ public
+ view
+ returns(address)
+ {
+   return (carrier);
+ }
+
+ function getDisputeResolver()
+ public
+ view
+ returns(address)
+ {
+   return (disputeResolver);
+ }
+
  function getAmmountBuyer()
  public
  view
@@ -190,7 +221,53 @@ contract Package {
    return (ammountBuyer);
  }
 
+ function getAmmountSeller()
+ public
+ view
+ returns(uint)
+ {
+   return (ammountSeller);
+ }
 
+ function getAmmountCarrier()
+ public
+ view
+ returns(uint)
+ {
+   return (ammountCarrier);
+ }
+
+ function getStakesInTo()
+ public
+ view
+ returns(uint)
+ {
+   return (waitingForStakesInTO);
+ }
+
+ function getarrivalTO()
+ public
+ view
+ returns(uint)
+ {
+   return (arrivalTO);
+ }
+
+ function getMerchVal()
+ public
+ view
+ returns(uint)
+ {
+   return (merchValue);
+ }
+
+ function getShippingFee()
+ public
+ view
+ returns(uint)
+ {
+   return (shippingFee);
+ }
 
 
 }
