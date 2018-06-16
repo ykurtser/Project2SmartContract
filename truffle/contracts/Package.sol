@@ -175,6 +175,21 @@ contract Package {
  {
    return uint(state);
  }
+ function getBuyer()
+ public
+ view
+ returns(address)
+ {
+   return (buyer);
+ }
+ function getAmmountBuyer()
+ public
+ view
+ returns(uint)
+ {
+   return (ammountBuyer);
+ }
+
 
 
 

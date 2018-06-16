@@ -1,7 +1,7 @@
 
 var PackageManager = artifacts.require('../contracts/PackageManager.sol');
 
-contract('PackageManager', function ([account0,account1,account2,account3]) {
+contract('PackageManager', function ([account0]) {
   it("should assert true", function(done) {
     var isDep=PackageManager.isDeployed();
       assert.isTrue(isDep);

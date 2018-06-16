@@ -8,8 +8,6 @@ contract TestPackageManager {
   PackageManager pkg = PackageManager(DeployedAddresses.PackageManager());
 
 function testAddress() public {
-
-
-  Assert.equal(pkg.getOwner(), 0xd51d1b97A1Dab01E0eEd629A31B09D58E3ccB642, "owners address");
+  Assert.equal(pkg.getOwner(), 0x627306090abab3a6e1400e9345bc60c78a8bef57, "owners address");
 }
 }
