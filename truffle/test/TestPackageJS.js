@@ -11,6 +11,22 @@ contract('Package', function ([seller,carrier,buyer,disputeResolver]) {
     var arrivalTO=5;
     var waitingForStakesInTO=6;
 
+    async function toShippedState(){
+        let buyerStake      =await pkg.getBuyerStake();
+        let sellerStake     =await pkg.getSellerStake();
+        let carrierStake    =await pkg.getSellerStake();
+        pkg.sendTransaction({from: buyer , value: buyerStake})
+        pkg.sendTransaction({from: seller , value: sellerStake})
+        pkg.sendTransaction({from: carrier , value: carrierStake})
+    }
+
+    async function fromShippedToDone(){
+        await pkg.signPackage("Station 1",{from:carrier})
+        await pkg.signPackage("Station 2",{from:carrier})
+        await pkg.signPackage("Station 3",{from:carrier})
+        await pkg.signPackage("Got it, Thanks",{from:buyer})
+    }
+
     beforeEach('setup contract for each test', async function(){
         pkg = await Package.new(seller,seller,carrier,buyer,disputeResolver,merchValue,shippingFee,arrivalTO,waitingForStakesInTO);
         console.log("new package created at address: " + pkg.address);
@@ -34,7 +50,6 @@ contract('Package', function ([seller,carrier,buyer,disputeResolver]) {
         assert.equal(_arrivalTO,arrivalTO);
         assert.equal(_waitingForStakesInTO,waitingForStakesInTO);
     })
-
     it("contructor Handles ether sent from buyer/seller/Carrier/stranger on creation", async function() {
         console.log("starting second");
         let _val=500
@@ -86,8 +101,25 @@ contract('Package', function ([seller,carrier,buyer,disputeResolver]) {
         assert.equal(_pkg_none_ammountCarrier,0);
         assert.equal(_pkg_none_ammountSeller,0);
         assert.equal(_pkg_none_ammountBuyer,0);
+    })
+    it("state Changes Normal flow", async function() {
+        let state = await pkg.getState();
+        assert.equal(state,0);
 
+        await toShippedState();
 
+        state = await pkg.getState();
+        assert.equal(state,1);
+
+        await pkg.signPackage("Station 1",{from:carrier})
+        await pkg.signPackage("Station 2",{from:carrier})
+        await pkg.signPackage("Station 3",{from:carrier})
+        console.log(await pkg.getTrajectory())
+        await pkg.signPackage("Got it, Thanks",{from:buyer})
+
+        //await fromShippedToDone();
+
+        //assert.throws(await pkg.getTrajectory(),"revert");
 
     })
 

@@ -20,13 +20,13 @@ contract Package {
 	string[] trajectory;
 	uint numOfSig; //number of stations allong pakage route
 
-	// Contract constructor: set owner
+	// Contract constructor set initials Values
 	constructor(address PkgCreator,address Seller,address Carrier,address Buyer,address DisputeResolver,uint MerchValue,uint ShippingFee, uint ArrivalTO, uint WaitingForStakesInTO) public payable
 	{
 	    seller = Seller;
 	    buyer = Buyer;
 	    carrier = Carrier;
-      packageManger = msg.sender;
+        packageManger = msg.sender;
 	    disputeResolver = DisputeResolver;
 	    merchValue = MerchValue;
 	    shippingFee = ShippingFee;
@@ -40,28 +40,12 @@ contract Package {
 	    waitingForStakesInTO = WaitingForStakesInTO;
 	    trajectory = new string[](100); // check how to keep trajectory
 
-
 	    //check if creator paid and update
-      resolvePayment(PkgCreator);
-
-
-	}
-  function resolvePayment(address payer) private
-  {
-    if (payer == buyer)
-    {
-        ammountBuyer=msg.value;
-    }
-    else if (payer == seller)
-    {
-        ammountSeller=msg.value;
-    }
-    else if (payer == carrier)
-    {
-        ammountCarrier=msg.value;
+        resolvePayment(PkgCreator);
     }
 
-  }
+    /////////////  Modifiers  /////////////
+
     modifier atState(State _state) {
         require(state == _state);
         _;
@@ -76,34 +60,52 @@ contract Package {
           terminateNotShipped();
         }
         else if (state == State.Shipped &&  now >= creationTime + arrivalTO)
-          {
-          terminateLost();
-          }
+        {
+            terminateLost();
+        }
         else if (state == State.Returned &&  now >= creationTime + 2*arrivalTO)
-          {
-              terminateOnReturn();
-          }
+        {
+            terminateOnReturn();
+        }
         _;
+    }
+
+    function resolvePayment(address payer) private
+    {
+        if (payer == buyer)
+        {
+            ammountBuyer=msg.value;
+        }
+        else if (payer == seller)
+        {
+            ammountSeller=msg.value;
+        }
+        else if (payer == carrier)
+        {
+            ammountCarrier=msg.value;
+        }
+
     }
 
     function changeState() private
     {
         state = State(uint(state) + 1);
     }
+
 	//pay to contract, check who paid, update amount paid then change state
     function () public payable timedTransitions() {
 	    resolvePayment(msg.sender);
 	    //check if everybody paid, package ready for shipping
-	    if (ammountBuyer >= merchValue+shippingFee && ammountSeller >= 2*shippingFee && ammountCarrier >= merchValue+shippingFee && state == State.WaitingForStakesIn)
+	    if (ammountBuyer >= getBuyerStake() && ammountSeller >= getSellerStake() && ammountCarrier >= getSellerStake() && state == State.WaitingForStakesIn)
 	        changeState();
 	}
 
 	function signPackage(string location) public timedTransitions() { //TODO MAKE CONDITIONS MORE READABLE
-	    require(state == State.Shipped && (msg.sender == carrier || msg.sender==buyer) || state == State.Returned && (msg.sender == carrier || msg.sender==seller));
-	    if (msg.sender == buyer)
+	    require( state == State.Shipped && (msg.sender == carrier || msg.sender==buyer) || state == State.Returned && (msg.sender == carrier || msg.sender==seller));
+        if (msg.sender == seller)
+            terminateReturned();
+        if (msg.sender == buyer)
 	        terminateNormal();
-	    if (msg.sender == seller)
-	        terminateReturned();
 	   // if signer is carrier just update trajectory
 	    trajectory[numOfSig] = location;
 	    numOfSig++;
@@ -171,103 +173,134 @@ contract Package {
    selfdestruct(packageManger);
  }
 
-////////// Getters ///////////
+ ////////// Getters ///////////
 
- function getState()
- public
- view
- returns(uint)
- {
-   return uint(state);
- }
+    function getState()
+    public
+    view
+    returns(uint)
+    {
+        return uint(state);
+    }
 
- function getBuyer()
- public
- view
- returns(address)
- {
-   return (buyer);
- }
+    function getBuyer()
+    public
+    view
+    returns(address)
+    {
+        return (buyer);
+    }
 
- function getSeller()
- public
- view
- returns(address)
- {
-   return (seller);
- }
+    function getSeller()
+    public
+    view
+    returns(address)
+    {
+        return (seller);
+    }
 
- function getCarrier()
- public
- view
- returns(address)
- {
-   return (carrier);
- }
+    function getCarrier()
+    public
+    view
+    returns(address)
+    {
+        return (carrier);
+    }
 
- function getDisputeResolver()
- public
- view
- returns(address)
- {
-   return (disputeResolver);
- }
+    function getDisputeResolver()
+    public
+    view
+    returns(address)
+    {
+        return (disputeResolver);
+    }
 
- function getAmmountBuyer()
- public
- view
- returns(uint)
- {
-   return (ammountBuyer);
- }
+    function getAmmountBuyer()
+    public
+    view
+    returns(uint)
+    {
+        return (ammountBuyer);
+    }
 
- function getAmmountSeller()
- public
- view
- returns(uint)
- {
-   return (ammountSeller);
- }
+    function getAmmountSeller()
+    public
+    view
+    returns(uint)
+    {
+        return (ammountSeller);
+    }
 
- function getAmmountCarrier()
- public
- view
- returns(uint)
- {
-   return (ammountCarrier);
- }
+    function getAmmountCarrier()
+    public
+    view
+    returns(uint)
+    {
+        return (ammountCarrier);
+    }
 
- function getStakesInTo()
- public
- view
- returns(uint)
- {
-   return (waitingForStakesInTO);
- }
+    function getStakesInTo()
+    public
+    view
+    returns(uint)
+    {
+        return (waitingForStakesInTO);
+    }
 
- function getarrivalTO()
- public
- view
- returns(uint)
- {
-   return (arrivalTO);
- }
+    function getarrivalTO()
+    public
+    view
+    returns(uint)
+    {
+        return (arrivalTO);
+    }
 
- function getMerchVal()
- public
- view
- returns(uint)
- {
-   return (merchValue);
- }
+    function getMerchVal()
+    public
+    view
+    returns(uint)
+    {
+        return (merchValue);
+    }
 
- function getShippingFee()
- public
- view
- returns(uint)
- {
-   return (shippingFee);
- }
+    function getShippingFee()
+    public
+    view
+    returns(uint)
+    {
+        return (shippingFee);
+    }
 
+    function getBuyerStake()
+    public
+    view
+    returns(uint)
+    {
+        return (merchValue+shippingFee);
+    }
+
+    function getSellerStake()
+    public
+    view
+    returns(uint)
+    {
+        return (2*shippingFee);
+    }
+
+    function getCarrierStake()
+    public
+    view
+    returns(uint)
+    {
+        return (merchValue+shippingFee);
+    }
+
+    function getTrajectory()
+    public
+    view
+    returns(string)
+    {
+        return (trajectory[0]);
+    }
 
 }
