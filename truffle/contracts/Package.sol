@@ -9,16 +9,17 @@ contract Package {
 	address buyer;
 	address disputeResolver;
     address packageManger;
-	uint merchValue; //todo resolve type if int256 is too big or can do float
-	uint shippingFee;
-	uint ammountBuyer;
-	uint ammountCarrier;
-	uint ammountSeller;
+	uint merchValue;           //[wei]
+	uint shippingFee;          //[wei]
+	uint ammountBuyer;         //[wei]
+	uint ammountCarrier;       //[wei]
+	uint ammountSeller;        //[wei]
 	uint creationTime;
-	uint arrivalTO;
-	uint waitingForStakesInTO ;
+	uint arrivalTO;            //[days]
+	uint waitingForStakesInTO ;//[days]
 	string[] trajectory;
 	uint numOfSig; //number of stations allong pakage route
+    event uintFieldAssigned(string fieldName, uint value);  //Debug event
 
 	// Contract constructor set initials Values
 	constructor(address PkgCreator,address Seller,address Carrier,address Buyer,address DisputeResolver,uint MerchValue,uint ShippingFee, uint ArrivalTO, uint WaitingForStakesInTO) public payable
@@ -41,7 +42,9 @@ contract Package {
 	    trajectory = new string[](100); // check how to keep trajectory
 
 	    //check if creator paid and update
-        resolvePayment(PkgCreator);
+        if(msg.value>0){
+            resolvePayment(PkgCreator);
+        }
     }
 
     /////////////  Modifiers  /////////////

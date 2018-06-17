@@ -6,18 +6,29 @@ const Package = artifacts.require('../contracts/Package.sol');
 contract('Package', function ([seller,carrier,buyer,disputeResolver]) {
 
     let pkg;
-    var merchValue=100000;
-    var shippingFee=3000;
-    var arrivalTO=5;
+    var merchValue=web3.toWei(2,'ether');
+    var shippingFee=web3.toWei(0.5,'ether');
+    var arrivalTO=6;
     var waitingForStakesInTO=6;
 
     async function toShippedState(){
-        let buyerStake      =await pkg.getBuyerStake();
-        let sellerStake     =await pkg.getSellerStake();
-        let carrierStake    =await pkg.getSellerStake();
-        pkg.sendTransaction({from: buyer , value: buyerStake})
-        pkg.sendTransaction({from: seller , value: sellerStake})
-        pkg.sendTransaction({from: carrier , value: carrierStake})
+        let sellerStake     =await pkg.getSellerStake.call()
+        let buyerStake      =await pkg.getBuyerStake.call()
+        let carrierStake    =await pkg.getCarrierStake.call()
+        assert.equal((sellerStake,2*shippingFee).toNumber)
+        assert.equal((sellerStake,merchValue+shippingFee).toNumber)
+        assert.equal((merchValue+shippingFee).toNumber)
+        console.log("gonna pay to pkg, from buyer:" + web3.fromWei(buyerStake,"ether") +
+        ", from seller:" + web3.fromWei(sellerStake,"ether") +
+        ", from carrier:" + web3.fromWei(carrierStake,"ether"))
+        console.log(await web3.eth.getBalance(pkg.address).toNumber())
+        web3.eth.sendTransaction({from: buyer, to: pkg.address, value: buyerStake});
+        console.log(await web3.eth.getBalance(pkg.address).toNumber())
+        web3.eth.sendTransaction({from: seller, to: pkg.address, value: sellerStake});
+        console.log(await web3.eth.getBalance(pkg.address).toNumber())
+        web3.eth.sendTransaction({from: carrier, to: pkg.address, value: carrierStake});
+        console.log(await web3.eth.getBalance(pkg.address).toNumber())
+
     }
 
     async function fromShippedToDone(){
@@ -51,7 +62,6 @@ contract('Package', function ([seller,carrier,buyer,disputeResolver]) {
         assert.equal(_waitingForStakesInTO,waitingForStakesInTO);
     })
     it("contructor Handles ether sent from buyer/seller/Carrier/stranger on creation", async function() {
-        console.log("starting second");
         let _val=500
         //creator is a different party for each contract
         let pkg_buyer = await Package.new(buyer,seller,carrier,buyer,disputeResolver,merchValue,shippingFee,arrivalTO,waitingForStakesInTO,{value:_val});
@@ -104,49 +114,17 @@ contract('Package', function ([seller,carrier,buyer,disputeResolver]) {
     })
     it("state Changes Normal flow", async function() {
         let state = await pkg.getState();
-        assert.equal(state,0);
+        //assert.equal(state,0);
 
         await toShippedState();
 
         state = await pkg.getState();
         assert.equal(state,1);
 
-        await pkg.signPackage("Station 1",{from:carrier})
-        await pkg.signPackage("Station 2",{from:carrier})
-        await pkg.signPackage("Station 3",{from:carrier})
-        console.log(await pkg.getTrajectory())
-        await pkg.signPackage("Got it, Thanks",{from:buyer})
+        await fromShippedToDone();
 
-        //await fromShippedToDone();
-
-        //assert.throws(await pkg.getTrajectory(),"revert");
+        assert.equal(await web3.eth.getCode(pkg.address),0);  //when contract terminates, get code returnes 0x0
 
     })
 
-//    it('state is waitingForStakesIn',  function () {
-//
-//    Package.deployed().then(function(instance) {return instance.getState();}).then(function(result) {
-//    assert.equal(0,result.toNumber())
-//    })
-//  });
-//    it('changeState to shipped correctly',  function () {
-//
-//        var pkg =Package.deployed()
-//        var pkgAddress=pkg.address
-//
-//
-//        pkg.then(function(instance) {return instance.getState();}).then(function(result) {
-//            assert.equal(0,result.toNumber())
-//        })
-//        pkg.then(function(instance) {return instance.sendTransaction({from: buyer , value: 100})})
-//
-//        pkg.then(function(instance) {return instance.getState();}).then(function(result) {
-//            assert.equal(0,result.toNumber())
-//        })
-//        pkg.then(function(instance) {return instance.getAmmountBuyer();}).then(function(result) {
-//            assert.equal(100,result.toNumber())
-//        })
-//
-//
-//    });
 })
