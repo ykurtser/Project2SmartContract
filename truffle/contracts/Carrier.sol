@@ -20,14 +20,16 @@ contract Carrier is Ownable{
 
     function addDeliveryStation(address station)
     public
-    onlyOwner() {
+    onlyOwner()
+    {
         emit DeliveryStationAdded(station);
         DeliveryStations.insert(station);
     }
 
     function removeDeliveryStation(address station)
     public
-    onlyOwner() {
+    onlyOwner()
+    {
         emit DeliveryStationRemoved(station);
         DeliveryStations.remove(station);
     }
@@ -37,6 +39,20 @@ contract Carrier is Ownable{
         require(DeliveryStations.contains(msg.sender));
         emit PackageSigned(msg.sender,pkg,location);
         pkg.signPackage(location);
+    }
+    function getOwner()
+    public
+    view
+    returns (address)
+    {
+        return (owner);
+    }
+    function containsStation(address station)
+    public
+    view
+    returns (bool)
+    {
+        return (DeliveryStations.contains(station));
     }
 
 }

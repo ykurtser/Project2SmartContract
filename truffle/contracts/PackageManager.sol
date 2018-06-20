@@ -16,7 +16,7 @@ contract PackageManager is Ownable{
         return new Package(msg.sender,Seller,Carrier,Buyer,DisputeResolver,MerchValue,ShippingFee,ArrivalTO, WaitingForStakesInTO);
     }
 
-    function createPackage()
+    function createCarrier()
     public
     returns (address)
     {
@@ -30,8 +30,6 @@ contract PackageManager is Ownable{
     {
         owner.transfer(address(this).balance);
     }
-
-
     function getOwner()
     public
     view
@@ -39,5 +37,11 @@ contract PackageManager is Ownable{
     {
         return (owner);
     }
+
+    function () public payable
+    {
+
+    }
+
 
 }
