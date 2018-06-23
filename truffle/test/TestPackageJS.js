@@ -3,13 +3,18 @@
 
 const Package = artifacts.require('../contracts/Package.sol');
 
-contract('Package', function ([seller,carrier,buyer,disputeResolver]) {
+contract('Package', function ([seller,carrier,buyer,disputeResolver,stranger]) {
 
     let pkg;
-    var merchValue=web3.toWei(2,'ether');
-    var shippingFee=web3.toWei(0.5,'ether');
+    var merchValue=web3.toWei(10,'ether');
+    var shippingFee=web3.toWei(2,'ether');
     var arrivalTO=6;
     var waitingForStakesInTO=6;
+
+    function toEther(numInWei)
+    {
+      return web3.fromWei(numInWei, 'ether')
+    }
 
     async function toShippedState(){
         let sellerStake     =await pkg.getSellerStake.call()
@@ -36,6 +41,18 @@ contract('Package', function ([seller,carrier,buyer,disputeResolver]) {
         await pkg.signPackage("Station 2",{from:carrier})
         await pkg.signPackage("Station 3",{from:carrier})
         await pkg.signPackage("Got it, Thanks",{from:buyer})
+    }
+
+    async function sign3stations(){
+        await pkg.signPackage("Station 1",{from:carrier})
+        await pkg.signPackage("Station 2",{from:carrier})
+        await pkg.signPackage("Station 3",{from:carrier})
+
+    }
+    async function printBalances(){
+      console.log("seller balance: "+toEther(await web3.eth.getBalance(seller).toNumber()))
+      console.log("buyer balance: "+toEther(await web3.eth.getBalance(buyer).toNumber()))
+      console.log("carrier balance: "+toEther(await web3.eth.getBalance(carrier).toNumber()))
     }
 
     beforeEach('setup contract for each test', async function(){
@@ -112,9 +129,81 @@ contract('Package', function ([seller,carrier,buyer,disputeResolver]) {
         assert.equal(_pkg_none_ammountSeller,0);
         assert.equal(_pkg_none_ammountBuyer,0);
     })
+    it("default payable, check resilving payment of each stakeholder/stranger, check shift state", async function() {
+        let _val=web3.toWei(10,'ether');
+
+        //use pakage created before, no funds tranfer on creation
+
+        //contracts balances
+        let _buyer_Balance = await pkg.getAmmountBuyer();
+        let _seller_Balance = await pkg.getAmmountSeller();
+        let _carrier_Balance = await pkg.getAmmountCarrier();
+        let _none_Balance = await web3.eth.getBalance(pkg.address);
+
+        //all should be 0
+        assert.equal(_seller_Balance,0);
+        assert.equal(_buyer_Balance,0);
+        assert.equal(_carrier_Balance,0);
+        assert.equal(_none_Balance,0);
+
+        let buyerStake=(await pkg.getBuyerStake()).toNumber()
+        //transfer 2 ether from each party and stranger
+        web3.eth.sendTransaction({from: buyer, to: pkg.address, value: buyerStake});
+        web3.eth.sendTransaction({from: seller, to: pkg.address, value: _val});
+        web3.eth.sendTransaction({from: carrier, to: pkg.address, value: _val});
+        web3.eth.sendTransaction({from: stranger, to: pkg.address, value: _val});
+        console.log("seller paid: "+await pkg.getAmmountSeller())
+        console.log("buyer paid: "+await pkg.getAmmountBuyer())
+        console.log("carrier paid: "+await pkg.getAmmountCarrier())
+        console.log("seller stake: "+await pkg.getSellerStake())
+        console.log("buyer stake: "+await pkg.getBuyerStake())
+        console.log("carrier stake: "+await pkg.getCarrierStake())
+
+        //bcheck ammount paid
+        _buyer_Balance = await pkg.getAmmountBuyer();
+        _seller_Balance = await pkg.getAmmountSeller();
+        _carrier_Balance = await pkg.getAmmountCarrier();
+        _none_Balance = await web3.eth.getBalance(pkg.address);
+        assert.equal(_seller_Balance.toNumber(),_val);
+        assert.equal(_buyer_Balance.toNumber(), buyerStake);
+        assert.equal(_carrier_Balance.toNumber(),_val);
+        //assert.equal(_none_Balance.toNumber(),_val);
+
+        //state should be 0, insufficient ammountSeller
+        let state = await pkg.getState();
+        assert.equal(state,0);
+
+        //tranfer another 2 ether from seller,carrier, check state after each transaction
+        web3.eth.sendTransaction({from: seller, to: pkg.address, value: _val});
+        state = await pkg.getState();
+        assert.equal(state,0);
+        web3.eth.sendTransaction({from: carrier, to: pkg.address, value: _val});
+        console.log("seller paid: "+await pkg.getAmmountSeller())
+        console.log("buyer paid: "+await pkg.getAmmountBuyer())
+        console.log("carrier paid: "+await pkg.getAmmountCarrier())
+
+
+        state = await pkg.getState();
+        assert.equal(state.toNumber(),1);
+
+        //balance for all should be the ammount sent
+        _buyer_Balance = await pkg.getAmmountBuyer();
+        _seller_Balance = await pkg.getAmmountSeller();
+        _carrier_Balance = await pkg.getAmmountCarrier();
+        _none_Balance = await web3.eth.getBalance(pkg.address);
+        assert.equal(_seller_Balance.toNumber(),_val*2);
+        assert.equal(_buyer_Balance.toNumber(),buyerStake);
+        assert.equal(_carrier_Balance.toNumber(),_val*2);
+        //assert.equal(_none_Balance.toNumber(),_val);
+
+        await printBalances()
+        console.log("stranger balance: "+await web3.eth.getBalance(stranger).toNumber())
+
+
+    })
     it("state Changes Normal flow", async function() {
         let state = await pkg.getState();
-        //assert.equal(state,0);
+        assert.equal(state,0);
 
         await toShippedState();
 
@@ -126,5 +215,100 @@ contract('Package', function ([seller,carrier,buyer,disputeResolver]) {
         assert.equal(await web3.eth.getCode(pkg.address),0);  //when contract terminates, get code returnes 0x0
 
     })
+    it("updates trajectroy", async function() {
+        let state = await pkg.getState();
+        assert.equal(state,0);
+
+        await toShippedState();
+
+        state = await pkg.getState();
+        assert.equal(state,1);
+        await sign3stations()
+
+         //fails because of requires()
+         //assert.throws(pkg.signPackage("garbage",{from:stranger}))
+
+        let traj =await pkg.getTrajectory()
+        let trajI =await pkg.getTrajectoryI(0)
+        console.log("trajectory:"+traj)
+        console.log("station 1:"+trajI)
+        await pkg.signPackage("Station 4",{from:buyer})
+
+        assert.equal(await web3.eth.getCode(pkg.address),0);  //when contract terminates, get code returnes 0x0
+
+    })
+    it("switch to returned state, terminate properly when seller sign", async function() {
+        let state = await pkg.getState();
+        assert.equal(state,0);
+
+        await toShippedState();
+
+        state = await pkg.getState();
+        assert.equal(state,1);
+        await sign3stations()
+
+        //print balances
+        await printBalances()
+        //buyer returns package
+        await pkg.returnPackage("RETURNED",{from:buyer})
+        state = await pkg.getState();
+        assert.equal(state,2);
+
+        console.log("Package returned")
+
+        //print balances
+        await printBalances()
+
+        await sign3stations()
+
+        let traj =await pkg.getTrajectory()
+        console.log("trajectory:"+traj)
+
+        await pkg.signPackage("Station 7",{from:seller})
+
+        //this should fail because of requires()
+        //await pkg.signPackage("Station 7",{from:buyer})
+
+        //print balances
+        await printBalances()
+
+        assert.equal(await web3.eth.getCode(pkg.address),0);  //when contract terminates, get code returnes 0x0
+
+    })
+    it("switch to dispute, then resolve", async function() {
+        let state = await pkg.getState();
+        assert.equal(state,0);
+
+        await toShippedState();
+
+        state = await pkg.getState();
+        assert.equal(state,1);
+        await sign3stations()
+        await pkg.returnPackage("RETURNED",{from:buyer})
+        state = await pkg.getState();
+        assert.equal(state,2);
+        console.log("Package returned")
+
+        await printBalances()
+
+        let traj =await pkg.getTrajectory()
+        console.log("trajectory:"+traj)
+
+        await pkg.openDispute({from: carrier})
+        state = await pkg.getState();
+        assert.equal(state,3);
+        console.log("Package under dispute")
+
+        await printBalances()
+
+
+        await pkg.resolveDispute(50,{from: disputeResolver})
+        console.log("dispute resolved")
+        await printBalances()
+
+        assert.equal(await web3.eth.getCode(pkg.address),0);  //when contract terminates, get code returnes 0x0
+
+    })
+
 
 })

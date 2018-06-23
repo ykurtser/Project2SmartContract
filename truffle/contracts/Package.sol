@@ -1,4 +1,5 @@
 pragma solidity ^0.4.21;
+pragma experimental ABIEncoderV2;
 
 
 contract Package {
@@ -20,6 +21,7 @@ contract Package {
 	string[] trajectory;
 	uint numOfSig; //number of stations allong pakage route
     event uintFieldAssigned(string fieldName, uint value);  //Debug event
+    event changedState(uint currState);  //Debug event
 
 	// Contract constructor set initials Values
 	constructor(address PkgCreator,address Seller,address Carrier,address Buyer,address DisputeResolver,uint MerchValue,uint ShippingFee, uint ArrivalTO, uint WaitingForStakesInTO) public payable
@@ -39,7 +41,7 @@ contract Package {
 	    creationTime = now;
 	    arrivalTO = ArrivalTO;
 	    waitingForStakesInTO = WaitingForStakesInTO;
-	    trajectory = new string[](100); // check how to keep trajectory
+	    trajectory = new string[](10); // check how to keep trajectory
 
 	    //check if creator paid and update
         if(msg.value>0){
@@ -77,15 +79,15 @@ contract Package {
     {
         if (payer == buyer)
         {
-            ammountBuyer=msg.value;
+            ammountBuyer+=msg.value;
         }
         else if (payer == seller)
         {
-            ammountSeller=msg.value;
+            ammountSeller+=msg.value;
         }
         else if (payer == carrier)
         {
-            ammountCarrier=msg.value;
+            ammountCarrier+=msg.value;
         }
 
     }
@@ -93,13 +95,14 @@ contract Package {
     function changeState() private
     {
         state = State(uint(state) + 1);
+        emit changedState(uint(state));
     }
 
 	//pay to contract, check who paid, update amount paid then change state
     function () public payable timedTransitions() {
 	    resolvePayment(msg.sender);
 	    //check if everybody paid, package ready for shipping
-	    if (ammountBuyer >= getBuyerStake() && ammountSeller >= getSellerStake() && ammountCarrier >= getSellerStake() && state == State.WaitingForStakesIn)
+	    if (ammountBuyer >= getBuyerStake() && ammountSeller >= getSellerStake() && ammountCarrier >= getCarrierStake() && state == State.WaitingForStakesIn)
 	        changeState();
 	}
 
@@ -133,8 +136,8 @@ contract Package {
   }
  function resolveDispute(uint sellersCut) public atState(State.UnderDispute){
    require(msg.sender == disputeResolver);
-   buyer.transfer(uint((merchValue + 2*shippingFee)*sellersCut/100));
-   buyer.transfer(uint((merchValue + 2*shippingFee)*(1-sellersCut)/100));
+   seller.transfer(uint(((merchValue + 2*shippingFee)*sellersCut)/100));
+   carrier.transfer(uint(((merchValue + 2*shippingFee)*(100-sellersCut))/100));
    selfdestruct(packageManger);
 
  }
@@ -301,9 +304,15 @@ contract Package {
     function getTrajectory()
     public
     view
+    returns(string[])
+    {
+        return (trajectory);
+    }
+    function getTrajectoryI(uint i)
+    public
+    view
     returns(string)
     {
-        return (trajectory[0]);
+        return (trajectory[i]);
     }
-
 }
