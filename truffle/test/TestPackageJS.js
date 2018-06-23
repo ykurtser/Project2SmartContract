@@ -56,7 +56,7 @@ contract('Package', function ([seller,carrier,buyer,disputeResolver,stranger]) {
     }
 
     beforeEach('setup contract for each test', async function(){
-        pkg = await Package.new(seller,seller,carrier,buyer,disputeResolver,merchValue,shippingFee,arrivalTO,waitingForStakesInTO);
+        pkg = await Package.new(stranger,seller,carrier,buyer,disputeResolver,merchValue,shippingFee,arrivalTO,waitingForStakesInTO);
         console.log("new package created at address: " + pkg.address);
     })
 
@@ -159,7 +159,7 @@ contract('Package', function ([seller,carrier,buyer,disputeResolver,stranger]) {
         console.log("buyer stake: "+await pkg.getBuyerStake())
         console.log("carrier stake: "+await pkg.getCarrierStake())
 
-        //bcheck ammount paid
+        //check ammount paid
         _buyer_Balance = await pkg.getAmmountBuyer();
         _seller_Balance = await pkg.getAmmountSeller();
         _carrier_Balance = await pkg.getAmmountCarrier();
@@ -264,10 +264,7 @@ contract('Package', function ([seller,carrier,buyer,disputeResolver,stranger]) {
         let traj =await pkg.getTrajectory()
         console.log("trajectory:"+traj)
 
-        await pkg.signPackage("Station 7",{from:seller})
-
-        //this should fail because of requires()
-        //await pkg.signPackage("Station 7",{from:buyer})
+        await pkg.signPackage("Got my merch back",{from:seller})
 
         //print balances
         await printBalances()

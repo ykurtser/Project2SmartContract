@@ -136,8 +136,8 @@ contract Package {
   }
  function resolveDispute(uint sellersCut) public atState(State.UnderDispute){
    require(msg.sender == disputeResolver);
-   seller.transfer(uint(((merchValue + 2*shippingFee)*sellersCut)/100));
-   carrier.transfer(uint(((merchValue + 2*shippingFee)*(100-sellersCut))/100));
+   seller.transfer(uint(( getDisputeFullAmmount() * sellersCut)/100));
+   carrier.transfer(uint(( getDisputeFullAmmount() * (100-sellersCut))/100));
    selfdestruct(packageManger);
 
  }
@@ -315,4 +315,13 @@ contract Package {
     {
         return (trajectory[i]);
     }
+
+    function getDisputeFullAmmount()
+    public
+    view
+    returns(uint)
+    {
+        return merchValue + (2*shippingFee);
+    }
+
 }
