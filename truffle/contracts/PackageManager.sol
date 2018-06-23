@@ -13,7 +13,8 @@ contract PackageManager is Ownable{
     public
     returns (address)
     {
-        return new Package(msg.sender,Seller,Carrier,Buyer,DisputeResolver,MerchValue,ShippingFee,ArrivalTO, WaitingForStakesInTO);
+        Package newPackege = new Package(msg.sender,Seller,Carrier,Buyer,DisputeResolver,MerchValue,ShippingFee,ArrivalTO, WaitingForStakesInTO);
+        return newPackege;
     }
 
     function createCarrier()
