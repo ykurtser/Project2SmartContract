@@ -17,6 +17,10 @@ contract Carrier is Ownable{
     public {
         DeliveryStations.insert(_owner);
     }
+    function () public payable
+    {
+
+    }
 
     function addDeliveryStation(address station)
     public
@@ -32,6 +36,12 @@ contract Carrier is Ownable{
     {
         emit DeliveryStationRemoved(station);
         DeliveryStations.remove(station);
+    }
+    function sendFundsToPackage(address pkg, uint ammount)
+    public
+    onlyOwner()
+    {
+        pkg.transfer(ammount);
     }
 
     function signPackage(Package pkg, string location)

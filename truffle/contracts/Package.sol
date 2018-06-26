@@ -99,7 +99,7 @@ contract Package {
     }
 
 	//pay to contract, check who paid, update amount paid then change state
-    function () public payable timedTransitions() {
+    function () public payable {
 	    resolvePayment(msg.sender);
 	    //check if everybody paid, package ready for shipping
 	    if (ammountBuyer >= getBuyerStake() && ammountSeller >= getSellerStake() && ammountCarrier >= getCarrierStake() && state == State.WaitingForStakesIn)
