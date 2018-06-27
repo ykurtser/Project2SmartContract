@@ -163,7 +163,7 @@ contract Package {
    }
    if (ammountSeller>0)
    {
-      buyer.transfer(ammountSeller);
+      seller.transfer(ammountSeller);
    }
    selfdestruct(packageManger);
  }
