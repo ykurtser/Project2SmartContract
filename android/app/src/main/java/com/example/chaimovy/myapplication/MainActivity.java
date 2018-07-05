@@ -3,8 +3,11 @@ package com.example.chaimovy.myapplication;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.Web3jFactory;
 import org.web3j.protocol.core.methods.response.Web3ClientVersion;
@@ -19,18 +22,22 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Web3j web3 = Web3jFactory.build(new HttpService("http://127.0.0.1:7545"));
+        TextView displayText = (TextView) findViewById(R.id.editText);
         try {
             Web3ClientVersion web3ClientVersion = web3.web3ClientVersion().sendAsync().get();
             String clientVersion = web3ClientVersion.getWeb3ClientVersion();
-            Toast.makeText(getApplicationContext(), clientVersion, Toast.LENGTH_LONG).show();
+
+            displayText.setText(clientVersion);
+
+
         }
         catch(ExecutionException e)
         {
-            // this part is executed when an exception (in this example InterruptedException) occurs
+            displayText.setText("failed");
         }
         catch(InterruptedException e)
         {
-            // this part is executed when an exception (in this example InterruptedException) occurs
+            displayText.setText("failed");
         }
 
     }
