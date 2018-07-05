@@ -8,17 +8,11 @@
 
     <EditText
         android:id="@+id/editText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="93dp"
-        android:layout_marginLeft="93dp"
-        android:layout_marginEnd="85dp"
-        android:layout_marginRight="85dp"
+        android:layout_width="249dp"
+        android:layout_height="372dp"
         android:ems="10"
         android:inputType="textPersonName"
         android:text="Name"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.51"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="223dp" />
+        tools:layout_editor_absoluteX="68dp"
+        tools:layout_editor_absoluteY="69dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
