@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CarrierActionMenu">
+
+    <Button
+        android:id="@+id/createPkgBt2"
+        android:layout_width="258dp"
+        android:layout_height="61dp"
+        android:text="Create Package"
+        tools:layout_editor_absoluteX="63dp"
+        tools:layout_editor_absoluteY="124dp" />
+
+    <Button
+        android:id="@+id/myPkgsBt2"
+        android:layout_width="258dp"
+        android:layout_height="61dp"
+        android:text="My Packages"
+        tools:layout_editor_absoluteX="63dp"
+        tools:layout_editor_absoluteY="185dp" />
+
+    <Button
+        android:id="@+id/signPkgBt2"
+        android:layout_width="258dp"
+        android:layout_height="61dp"
+        android:text="sign package"
+        tools:layout_editor_absoluteX="63dp"
+        tools:layout_editor_absoluteY="247dp" />
+
+    <Button
+        android:id="@+id/openDispBt2"
+        android:layout_width="258dp"
+        android:layout_height="61dp"
+        android:text="Open dispute"
+        tools:layout_editor_absoluteX="63dp"
+        tools:layout_editor_absoluteY="308dp" />
+
+    <Button
+        android:id="@+id/addDeliveryGuyBt"
+        android:layout_width="258dp"
+        android:layout_height="61dp"
+        android:text="add new delivery guy"
+        tools:layout_editor_absoluteX="63dp"
+        tools:layout_editor_absoluteY="369dp" />
+</androidx.constraintlayout.widget.ConstraintLayout>

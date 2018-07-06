@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ActionMenu">
+
+    <Button
+        android:id="@+id/createPkgBt"
+        android:layout_width="258dp"
+        android:layout_height="61dp"
+        android:text="Create Package"
+        tools:layout_editor_absoluteX="63dp"
+        tools:layout_editor_absoluteY="124dp" />
+
+    <Button
+        android:id="@+id/openDispBt"
+        android:layout_width="258dp"
+        android:layout_height="61dp"
+        android:text="Open dispute"
+        tools:layout_editor_absoluteX="63dp"
+        tools:layout_editor_absoluteY="308dp" />
+
+    <Button
+        android:id="@+id/myPkgsBt"
+        android:layout_width="258dp"
+        android:layout_height="61dp"
+        android:text="My Packages"
+        tools:layout_editor_absoluteX="63dp"
+        tools:layout_editor_absoluteY="185dp" />
+
+    <Button
+        android:id="@+id/returnPkgBt"
+        android:layout_width="258dp"
+        android:layout_height="61dp"
+        android:text="return package"
+        tools:layout_editor_absoluteX="63dp"
+        tools:layout_editor_absoluteY="369dp" />
+
+    <Button
+        android:id="@+id/signPkgBt"
+        android:layout_width="258dp"
+        android:layout_height="61dp"
+        android:text="sign package"
+        tools:layout_editor_absoluteX="63dp"
+        tools:layout_editor_absoluteY="247dp" />
+</androidx.constraintlayout.widget.ConstraintLayout>
