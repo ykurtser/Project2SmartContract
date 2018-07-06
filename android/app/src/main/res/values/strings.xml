@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">Delivery Dapp</string>
     <string name="title_activity_login_buyer_seller">Sign in</string>
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
@@ -15,4 +15,6 @@
     </string>
     <string name="title_activity_login_delivery_company">Sign in</string>
     <string name="title_activity_create_package">Sign in</string>
+    <string name="web3host">http://10.0.2.2:7545</string>
+    <string name="packageManagerAddr">0x123</string>
 </resources>
