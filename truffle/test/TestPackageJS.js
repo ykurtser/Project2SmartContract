@@ -1,9 +1,9 @@
 
 
 
-const Package = artifacts.require('../contracts/Package.sol');
+const P2Package = artifacts.require('../contracts/P2Package.sol');
 
-contract('Package', function ([seller,carrier,buyer,disputeResolver,stranger]) {
+contract('P2Package', function ([seller,carrier,buyer,disputeResolver,stranger]) {
 
     let pkg;
     var merchValue=web3.toWei(10,'ether');
@@ -56,7 +56,7 @@ contract('Package', function ([seller,carrier,buyer,disputeResolver,stranger]) {
     }
 
     beforeEach('setup contract for each test', async function(){
-        pkg = await Package.new(stranger,seller,carrier,buyer,disputeResolver,merchValue,shippingFee,arrivalTO,waitingForStakesInTO);
+        pkg = await P2Package.new(stranger,seller,carrier,buyer,disputeResolver,merchValue,shippingFee,arrivalTO,waitingForStakesInTO);
         console.log("new package created at address: " + pkg.address);
     })
 
@@ -81,10 +81,10 @@ contract('Package', function ([seller,carrier,buyer,disputeResolver,stranger]) {
     it("contructor Handles ether sent from buyer/seller/Carrier/stranger on creation", async function() {
         let _val=500
         //creator is a different party for each contract
-        let pkg_buyer = await Package.new(buyer,seller,carrier,buyer,disputeResolver,merchValue,shippingFee,arrivalTO,waitingForStakesInTO,{value:_val});
-        let pkg_seller = await Package.new(seller,seller,carrier,buyer,disputeResolver,merchValue,shippingFee,arrivalTO,waitingForStakesInTO,{value:_val});
-        let pkg_carrier = await Package.new(carrier,seller,carrier,buyer,disputeResolver,merchValue,shippingFee,arrivalTO,waitingForStakesInTO,{value:_val});
-        let pkg_none = await Package.new(web3.eth.accounts[8],seller,carrier,buyer,disputeResolver,merchValue,shippingFee,arrivalTO,waitingForStakesInTO,{value:_val});
+        let pkg_buyer = await P2Package.new(buyer,seller,carrier,buyer,disputeResolver,merchValue,shippingFee,arrivalTO,waitingForStakesInTO,{value:_val});
+        let pkg_seller = await P2Package.new(seller,seller,carrier,buyer,disputeResolver,merchValue,shippingFee,arrivalTO,waitingForStakesInTO,{value:_val});
+        let pkg_carrier = await P2Package.new(carrier,seller,carrier,buyer,disputeResolver,merchValue,shippingFee,arrivalTO,waitingForStakesInTO,{value:_val});
+        let pkg_none = await P2Package.new(web3.eth.accounts[8],seller,carrier,buyer,disputeResolver,merchValue,shippingFee,arrivalTO,waitingForStakesInTO,{value:_val});
 
         //contracts balances
         let _pkg_buyer_Balance = await web3.eth.getBalance(pkg_buyer.address);

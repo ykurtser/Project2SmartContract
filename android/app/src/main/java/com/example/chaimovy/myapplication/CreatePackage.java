@@ -74,8 +74,8 @@ public class CreatePackage extends AppCompatActivity {
         Credentials myCred=Credentials.create(myKey,myAddr);
 
 
-        pMan = PackageManager.load(getString(R.string.packageManagerAddr), web3, myCred, new BigInteger("90990051782"), myBalance);
-
+        pMan = P2PackageManager.load(getString(R.string.packageManagerAddr), web3, myCred, new BigInteger("90990051782"), myBalance);
+        PackageManager.
 
         //set objects to all buttons/textviews
         buyerAddr      = (EditText)findViewById(R.id.buyerAddrText);
@@ -89,6 +89,7 @@ public class CreatePackage extends AppCompatActivity {
         initialPayment = (EditText)findViewById(R.id.initialPaymentText);
 
         Button createPackageBt  = (Button)findViewById(R.id.CreateNewPkgBt);
+
 
         createPackageBt.setOnClickListener(
                 new View.OnClickListener()

@@ -1,25 +1,25 @@
 // Version of Solidity compiler this program was written for
 pragma solidity ^0.4.21;
-import "./Carrier.sol";
+import "./P2Carrier.sol";
 
 
-contract PackageManager is Ownable{
+contract P2PackageManager is P2Ownable{
     event contractCreated(address addr);
     constructor()
-    Ownable(msg.sender)
+    P2Ownable(msg.sender)
     public {}
 
     function createPackage(address Seller,address Carrier,address Buyer,address DisputeResolver,uint MerchValue,uint ShippingFee, uint ArrivalTO, uint WaitingForStakesInTO)
     public
     {
-        Package newPackege = new Package(msg.sender,Seller,Carrier,Buyer,DisputeResolver,MerchValue,ShippingFee,ArrivalTO, WaitingForStakesInTO);
+        P2Package newPackege = new P2Package(msg.sender,Seller,Carrier,Buyer,DisputeResolver,MerchValue,ShippingFee,ArrivalTO,WaitingForStakesInTO);
         emit contractCreated(address(newPackege));
     }
 
     function createCarrier()
     public
     {
-        Carrier newCarrier = new Carrier(msg.sender);
+        P2Carrier newCarrier = new P2Carrier(msg.sender);
         emit contractCreated(address(newCarrier));
     }
 

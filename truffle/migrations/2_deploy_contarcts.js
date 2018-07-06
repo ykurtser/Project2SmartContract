@@ -1,8 +1,8 @@
 
-var PackageManager = artifacts.require("PackageManager");
+var PackageManager = artifacts.require("P2PackageManager");
 //var Package= artifacts.require("Package");
-var AddressSet = artifacts.require("AddressSet")
-var Carrier = artifacts.require("Carrier")
+var AddressSet = artifacts.require("P2AddressSet")
+var Carrier = artifacts.require("P2Carrier")
 var accounts = web3.eth.accounts;
 
 module.exports = function(deployer) {

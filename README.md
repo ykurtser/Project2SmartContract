@@ -56,3 +56,12 @@ gas statistics
 ## Our work outside github:
 Design Doc:
 >https://docs.google.com/document/d/1SY4MZ2lpgaZFmno_a3G7N8HybsHYpK0T1cBQ6YVagMg/edit
+
+
+
+
+
+for creating contract Java abstraction files:
+1) solc <.sol file path> --bin --abi --optimize -o <out files path>     (ex. solc ../truffle/contracts/P2PackageManager.sol --bin --abi --optimize -o ./)
+2) web3j solidity generate <.bin file path> <.abi file path> -o <project src/main path> -p <project's package name>
+(ex. web3j solidity generate ./P2Carrier.bin ./P2Carrier.abi -o ./../android/app/src/main/ -p com.example.chaimovy.myapplication)

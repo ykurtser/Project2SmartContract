@@ -1,6 +1,6 @@
 pragma solidity ^0.4.22;
 
-library AddressSet {
+library P2AddressSet {
   // We define a new struct datatype that will be used to
   // hold its data in the calling contract.
   struct set { mapping(address => bool) flags; }

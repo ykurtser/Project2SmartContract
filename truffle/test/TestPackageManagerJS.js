@@ -1,15 +1,15 @@
 
-const PackageManager = artifacts.require('../contracts/PackageManager.sol');
-const Package = artifacts.require("Package");
-const Carrier = artifacts.require("Carrier");
+const P2PackageManager = artifacts.require('../contracts/P2PackageManager.sol');
+const P2Package = artifacts.require("P2Package");
+const P2Carrier = artifacts.require("P2Carrier");
 
-contract('PackageManager', function (accounts) {
+contract('P2PackageManager', function (accounts) {
   var pkgManager;
   var ammount=web3.toWei(1,'ether');
 
 
   beforeEach('setup contract for each test', async function(){
-      pkgManager = await PackageManager.new();
+      pkgManager = await P2PackageManager.new();
       console.log("new pkgManager created at address: " + pkgManager.address);
   })
 
@@ -24,10 +24,10 @@ contract('PackageManager', function (accounts) {
     console.log("value for transaction: "+ammount)
     web3.eth.sendTransaction({from: accounts[6], to: pkgManager.address, value: ammount});
     console.log("after transferring " +ammount+ " from account 7  balance is" +await web3.eth.getBalance(accounts[6]).toNumber())
-    console.log("PackageManager Balance: " +await web3.eth.getBalance(pkgManager.address).toNumber())
+    console.log("P2PackageManager Balance: " +await web3.eth.getBalance(pkgManager.address).toNumber())
     console.log("account 0 balance: "+await web3.eth.getBalance(accounts[0]).toNumber())
     await pkgManager.claimExcessEth()
-    console.log("after collecting, PackageManager Balance: " +await web3.eth.getBalance(pkgManager.address).toNumber())
+    console.log("after collecting, P2PackageManager Balance: " +await web3.eth.getBalance(pkgManager.address).toNumber())
     console.log("account 0 balance: "+await web3.eth.getBalance(accounts[0]).toNumber())
   })
   it('create carrier, create package, carrier sign package succesfully', async function () {
@@ -42,9 +42,9 @@ contract('PackageManager', function (accounts) {
 
     console.log(newCarrierAddress)
   //  console.log(Package.abi)
-    var packageAbi = web3.eth.contract(Package.abi);
+    var packageAbi = web3.eth.contract(P2Package.abi);
     var newPkg = packageAbi.at(newPkgAddress);
-    var carrierAbi = web3.eth.contract(Carrier.abi);
+    var carrierAbi = web3.eth.contract(P2Carrier.abi);
     var newCarrier = carrierAbi.at(newCarrierAddress);
 
     //console.log(newPkg.getMerchVal().toNumber())

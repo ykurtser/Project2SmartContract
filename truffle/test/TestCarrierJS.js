@@ -1,12 +1,12 @@
 
-const Carrier = artifacts.require('../contracts/Carrier.sol');
+const P2Carrier = artifacts.require('../contracts/P2Carrier.sol');
 
 
-contract('Carrier', function ([carrierOwner,deliveryGuy1,deliveryGuy2,deliveryGuy3]) {
+contract('P2Carrier', function ([carrierOwner,deliveryGuy1,deliveryGuy2,deliveryGuy3]) {
   let carrier;
 
   beforeEach('setup contract for each test', async function(){
-      carrier = await Carrier.new(carrierOwner);
+      carrier = await P2Carrier.new(carrierOwner);
       console.log("new carrier created at address: " + carrier.address);
   })
 

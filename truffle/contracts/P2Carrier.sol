@@ -1,19 +1,19 @@
 pragma solidity ^0.4.21;
 
-import "./AddressSet.sol";
-import "./Ownable.sol";
-import "./Package.sol";
+import "./P2AddressSet.sol";
+import "./P2Ownable.sol";
+import "./P2Package.sol";
 
-contract Carrier is Ownable{
-    using AddressSet for AddressSet.set;
-    AddressSet.set DeliveryStations;
+contract P2Carrier is P2Ownable{
+    using P2AddressSet for P2AddressSet.set;
+    P2AddressSet.set DeliveryStations;
 
     event DeliveryStationAdded(address indexed station);
     event DeliveryStationRemoved(address indexed station);
-    event PackageSigned(address signer, Package package, string location);
+    event PackageSigned(address signer, P2Package pkg, string location);
 
     constructor(address _owner)
-    Ownable(_owner)
+    P2Ownable(_owner)
     public {
         DeliveryStations.insert(_owner);
     }
@@ -44,7 +44,7 @@ contract Carrier is Ownable{
         pkg.transfer(ammount);
     }
 
-    function signPackage(Package pkg, string location)
+    function signPackage(P2Package pkg, string location)
     public {
         require(DeliveryStations.contains(msg.sender));
         emit PackageSigned(msg.sender,pkg,location);

@@ -2,11 +2,11 @@ pragma solidity ^0.4.23;
 
 
 /**
- * @title Ownable
- * @dev The Ownable contract has an owner address, and provides basic authorization control
+ * @title P2Ownable
+ * @dev The P2Ownable contract has an owner address, and provides basic authorization control
  * functions, this simplifies the implementation of "user permissions".
  */
-contract Ownable {
+contract P2Ownable {
     address public owner;
 
     event OwnershipRenounced(address indexed previousOwner);
@@ -17,7 +17,7 @@ contract Ownable {
 
 
   /**
-   * @dev The Ownable constructor sets the original `owner` of the contract to the sender
+   * @dev The P2Ownable constructor sets the original `owner` of the contract to the sender
    * account.
    */
   constructor(address _owner) public {

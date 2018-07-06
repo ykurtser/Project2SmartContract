@@ -2,7 +2,7 @@ pragma solidity ^0.4.21;
 pragma experimental ABIEncoderV2;
 
 
-contract Package {
+contract P2Package {
     enum State {WaitingForStakesIn, Shipped, Returned, UnderDispute}
     State  state;
 	address seller;
