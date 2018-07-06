@@ -36,7 +36,10 @@
             android:name=".CreatePackage"
             android:label="@string/title_activity_create_package" />
         <activity android:name=".SignPackage" />
-        <activity android:name=".AddDeliveryGuy"></activity>
+        <activity android:name=".AddDeliveryGuy" />
+        <activity android:name=".MyPackages" />
+        <activity android:name=".OpenDispute" />
+        <activity android:name=".ReturnPackage"></activity>
     </application>
 
 </manifest>

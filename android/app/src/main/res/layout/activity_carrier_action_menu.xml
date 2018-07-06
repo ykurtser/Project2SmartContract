@@ -7,38 +7,37 @@
     tools:context=".CarrierActionMenu">
 
     <Button
-        android:id="@+id/createPkgBt2"
+        android:id="@+id/carrierCreatePkgBt"
         android:layout_width="258dp"
         android:layout_height="61dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="88dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
         android:text="Create Package"
-        app:layout_constraintBottom_toTopOf="@+id/myPkgsBt2"
+        app:layout_constraintBottom_toTopOf="@+id/CarrierMyPkgsBt"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/myPkgsBt2"
+        android:id="@+id/CarrierMyPkgsBt"
         android:layout_width="258dp"
         android:layout_height="61dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="12dp"
         android:text="My Packages"
-        app:layout_constraintBottom_toTopOf="@+id/signPkgBt2"
+        app:layout_constraintBottom_toTopOf="@+id/CarrierSignPkgBt"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/signPkgBt2"
+        android:id="@+id/CarrierSignPkgBt"
         android:layout_width="258dp"
         android:layout_height="61dp"
         android:layout_marginStart="8dp"
@@ -47,12 +46,12 @@
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
         android:text="sign package"
-        app:layout_constraintBottom_toTopOf="@+id/openDispBt2"
+        app:layout_constraintBottom_toTopOf="@+id/CarrierOpenDisputeBt"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/openDispBt2"
+        android:id="@+id/CarrierOpenDisputeBt"
         android:layout_width="258dp"
         android:layout_height="61dp"
         android:layout_marginStart="8dp"

@@ -46,10 +46,7 @@ public class LoginActivityDeliveryCompany extends AppCompatActivity{
             public void onClick(View v){
                 String UserAddr = CarrierPublicAddrText.getText().toString();
                 String key = PrivateKeyText.getText().toString();
-                Intent I = new Intent(getApplicationContext(), CarrierActionMenu.class);
-                I.putExtra("address", UserAddr);
-                I.putExtra("key", key);
-                startActivity(I);
+                //TODO: create carrier contract
 
             }
 
