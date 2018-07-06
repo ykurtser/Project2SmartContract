@@ -67,7 +67,7 @@ public class LoginActivityBuyerSeller extends AppCompatActivity implements Loade
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_buyer_seller);
         // Set up the login form.
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
+        mEmailView = (AutoCompleteTextView) findViewById(R.id.PublicAddText);
         populateAutoComplete();
 
         mPasswordView = (EditText) findViewById(R.id.password);

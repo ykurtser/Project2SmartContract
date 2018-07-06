@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Web3j web3 = Web3jFactory.build(new HttpService("http://10.0.2.2:7545"));
-        TextView displayText = findViewById(R.id.editText);
+        TextView displayText = findViewById(R.id.textView);
         try {
             Web3ClientVersion web3ClientVersion = web3.web3ClientVersion().sendAsync().get();
             String clientVersion = web3ClientVersion.getWeb3ClientVersion();

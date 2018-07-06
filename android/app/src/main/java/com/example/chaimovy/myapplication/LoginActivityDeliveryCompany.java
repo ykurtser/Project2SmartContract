@@ -67,7 +67,7 @@ public class LoginActivityDeliveryCompany extends AppCompatActivity implements L
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_delivery_company);
         // Set up the login form.
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
+        mEmailView = (AutoCompleteTextView) findViewById(R.id.PublicAddText);
         populateAutoComplete();
 
         mPasswordView = (EditText) findViewById(R.id.password);
