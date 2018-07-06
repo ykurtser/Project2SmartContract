@@ -32,9 +32,6 @@
             android:label="@string/title_activity_login_delivery_company" />
         <activity android:name=".ActionMenu" />
         <activity android:name=".CarrierActionMenu" />
-        <activity
-            android:name=".CreatePackage"
-            android:label="@string/title_activity_create_package" />
         <activity android:name=".SignPackage" />
         <activity android:name=".AddDeliveryGuy" />
         <activity android:name=".MyPackages" />
