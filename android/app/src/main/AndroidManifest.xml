@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.chaimovy.myapplication">
+
     <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
 
     <application
         android:allowBackup="true"
@@ -9,8 +15,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:usesCleartextTraffic="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true">
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -18,6 +24,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".LoginActivityBuyerSeller"
+            android:label="@string/title_activity_login_buyer_seller" />
+        <activity
+            android:name=".LoginActivityDeliveryCompany"
+            android:label="@string/title_activity_login_delivery_company" />
+        <activity android:name=".ActionMenu" />
+        <activity android:name=".CarrierActionMenu" />
+        <activity
+            android:name=".CreatePackage"
+            android:label="@string/title_activity_create_package" />
+        <activity android:name=".SignPackage" />
+        <activity android:name=".AddDeliveryGuy"></activity>
     </application>
 
 </manifest>

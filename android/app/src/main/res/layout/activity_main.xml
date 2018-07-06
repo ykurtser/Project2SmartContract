@@ -6,13 +6,36 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <EditText
-        android:id="@+id/editText"
-        android:layout_width="249dp"
-        android:layout_height="372dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Name"
-        tools:layout_editor_absoluteX="68dp"
-        tools:layout_editor_absoluteY="69dp" />
+    <Button
+        android:id="@+id/DeliveryGuyBt"
+        android:layout_width="258dp"
+        android:layout_height="61dp"
+        android:text="Delivery Guy "
+        tools:layout_editor_absoluteX="63dp"
+        tools:layout_editor_absoluteY="304dp" />
+
+    <Button
+        android:id="@+id/BuyerSellerBt"
+        android:layout_width="258dp"
+        android:layout_height="61dp"
+        android:text="Buyer/Seller"
+        tools:layout_editor_absoluteX="63dp"
+        tools:layout_editor_absoluteY="124dp" />
+
+    <Button
+        android:id="@+id/DeliveryManagerBt"
+        android:layout_width="258dp"
+        android:layout_height="61dp"
+        android:text="Delivaer Company Manager"
+        tools:layout_editor_absoluteX="63dp"
+        tools:layout_editor_absoluteY="215dp" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="261dp"
+        android:layout_height="42dp"
+        android:text="Welcome! "
+        tools:layout_editor_absoluteX="60dp"
+        tools:layout_editor_absoluteY="35dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
