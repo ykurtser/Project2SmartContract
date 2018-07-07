@@ -1,27 +1,20 @@
 package com.example.chaimovy.myapplication;
 
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
-import org.web3j.abi.datatypes.Int;
+import com.example.chaimovy.P2PackageManager;
+
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.Web3jFactory;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.methods.response.EthGetBalance;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
-import org.web3j.protocol.core.methods.response.Web3ClientVersion;
 import org.web3j.protocol.http.HttpService;
-import org.web3j.tx.Transfer;
-import org.web3j.utils.Convert;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.concurrent.ExecutionException;
 
@@ -39,7 +32,7 @@ public class CreatePackage extends AppCompatActivity {
     EditText TO2;
     EditText initialPayment;
 
-    PackageManager pMan;
+    P2PackageManager pMan;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +68,7 @@ public class CreatePackage extends AppCompatActivity {
 
 
         pMan = P2PackageManager.load(getString(R.string.packageManagerAddr), web3, myCred, new BigInteger("90990051782"), myBalance);
-        PackageManager.
+
 
         //set objects to all buttons/textviews
         buyerAddr      = (EditText)findViewById(R.id.buyerAddrText);
@@ -88,27 +81,36 @@ public class CreatePackage extends AppCompatActivity {
         TO2            = (EditText)findViewById(R.id.TO2Text);
         initialPayment = (EditText)findViewById(R.id.initialPaymentText);
 
-        Button createPackageBt  = (Button)findViewById(R.id.CreateNewPkgBt);
+        final Button createPackageBt  = (Button)findViewById(R.id.CreateNewPkgBt);
 
 
-        createPackageBt.setOnClickListener(
-                new View.OnClickListener()
+        createPackageBt.setOnClickListener(new View.OnClickListener()
                 {
-                    @override
+                    @Override
                     public void onClick(View view)
                     {
                         String BuyerAddrStr     = buyerAddr.getText().toString();
                         String sellerAddrStr    = sellerAddr.getText().toString();
                         String dispResAddrstr   = dispResAddr.getText().toString();
                         String carrierAddrStr   = carrierAddr.getText().toString();
-                        Integer shippigFeeInt   = Integer.parseInt(shippigFee.getText().toString());
-                        Integer merchValueInt   = Integer.parseInt(merchValue.getText().toString());
-                        Integer TO1Int          = Integer.parseInt(TO1.getText().toString());
-                        Integer TO2Int          = Integer.parseInt(TO2.getText().toString());
-                        Integer initialPaymentInt  = Integer.parseInt((initialPayment.getText().toString()));
+                        BigInteger shippigFeeInt   = new BigInteger(shippigFee.getText().toString());
+                        BigInteger merchValueInt   =new BigInteger(merchValue.getText().toString());
+                        BigInteger TO1Int          = new BigInteger(TO1.getText().toString());
+                        BigInteger TO2Int          = new BigInteger(TO2.getText().toString());
+                        BigInteger initialPaymentInt  = new BigInteger((initialPayment.getText().toString()));
+                        try
+                        {
+                            TransactionReceipt txRecp = pMan.createPackage(sellerAddrStr,carrierAddrStr,BuyerAddrStr,dispResAddrstr,merchValueInt,shippigFeeInt,TO1Int,TO2Int).send();
+                            String txReciept = txRecp.toString();//.getLogs().get(0).getData();
+                            createPackageBt.setText(txReciept);
 
-                        TransactionReceipt txRecp = pMan.createPackage(sellerAddrStr,carrierAddrStr,BuyerAddrStr,dispResAddrstr,merchValueInt,shippigFeeInt,TO1Int,TO2Int).send();
-                        txRecp.getLogs().get(0).getData();
+                        }
+                        catch (Exception e){
+                            createPackageBt.setText(e.toString());
+
+                        }
+
+
 
                     }
                 });
