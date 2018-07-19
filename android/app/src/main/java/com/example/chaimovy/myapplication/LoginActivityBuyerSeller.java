@@ -28,7 +28,7 @@ public class LoginActivityBuyerSeller extends AppCompatActivity {
                 String key = PrivateKeyText.getText().toString();
                 Intent I = new Intent(getApplicationContext(), ActionMenu.class);
                 I.putExtra("address", "0x5E46aef5B1ce6C86aF9B27B10f011d4A2348D1ec");  //TODO return to given addr
-                I.putExtra("key", "8325d59384506fa3f5b6d92ecee138b7f209d4c1e1b0a9b266df2bc6d0fc6564"); //todo return to given key
+                I.putExtra("key", "0x8325d59384506fa3f5b6d92ecee138b7f209d4c1e1b0a9b266df2bc6d0fc6564"); //todo return to given key
                 startActivity(I);
 
             }

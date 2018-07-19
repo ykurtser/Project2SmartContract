@@ -20,6 +20,20 @@
         android:layout_marginBottom="8dp"
         android:visibility="gone" />
 
+    <EditText
+        android:id="@+id/debug_addr_key"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName" />
+
+    <EditText
+        android:id="@+id/debug_exception"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName" />
+
     <ScrollView
         android:id="@+id/login_form"
         android:layout_width="match_parent"
