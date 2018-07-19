@@ -89,6 +89,7 @@ public class CreatePackage extends AppCompatActivity {
                     @Override
                     public void onClick(View view)
                     {
+                        /*
                         String BuyerAddrStr     = buyerAddr.getText().toString();
                         String sellerAddrStr    = sellerAddr.getText().toString();
                         String dispResAddrstr   = dispResAddr.getText().toString();
@@ -98,6 +99,18 @@ public class CreatePackage extends AppCompatActivity {
                         BigInteger TO1Int          = new BigInteger(TO1.getText().toString());
                         BigInteger TO2Int          = new BigInteger(TO2.getText().toString());
                         BigInteger initialPaymentInt  = new BigInteger((initialPayment.getText().toString()));
+                        */
+
+                        String BuyerAddrStr     = "0x5E46aef5B1ce6C86aF9B27B10f011d4A2348D1ec";
+                        String sellerAddrStr    = "0x52DF6906851A5CaEE19CDC6442d296D952338a0a";
+                        String dispResAddrstr   = "0x780E9bDC47Ef692116B76f40aa2Ed7bd7bB70Ef4";
+                        String carrierAddrStr   = "0x780E9bDC47Ef692116B76f40aa2Ed7bd7bB70Ef4";
+                        BigInteger shippigFeeInt   = new BigInteger(shippigFee.getText().toString());
+                        BigInteger merchValueInt   =new BigInteger(merchValue.getText().toString());
+                        BigInteger TO1Int          = new BigInteger(TO1.getText().toString());
+                        BigInteger TO2Int          = new BigInteger(TO2.getText().toString());
+                        BigInteger initialPaymentInt  = new BigInteger((initialPayment.getText().toString()));
+
                         try
                         {
                             TransactionReceipt txRecp = pMan.createPackage(sellerAddrStr,carrierAddrStr,BuyerAddrStr,dispResAddrstr,merchValueInt,shippigFeeInt,TO1Int,TO2Int).send();

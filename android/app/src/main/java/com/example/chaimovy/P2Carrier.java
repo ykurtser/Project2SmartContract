@@ -1,4 +1,4 @@
-package com.example.chaimovy.myapplication;
+package com.example.chaimovy;
 
 import java.math.BigInteger;
 import java.util.ArrayList;

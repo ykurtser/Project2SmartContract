@@ -16,5 +16,5 @@
     <string name="title_activity_login_delivery_company">Sign in</string>
     <string name="title_activity_create_package">Sign in</string>
     <string name="web3host">http://10.0.2.2:7545</string>
-    <string name="packageManagerAddr">0x123</string>
+    <string name="packageManagerAddr">0xecb7d8a3eb09645e0b07121533156d06cdc9c6e8</string>
 </resources>

@@ -36,6 +36,7 @@
         <activity android:name=".AddDeliveryGuy" />
         <activity android:name=".MyPackages" />
         <activity android:name=".OpenDispute" />
+        <activity android:name=".CreatePackage" />
         <activity android:name=".ReturnPackage"></activity>
     </application>
 
