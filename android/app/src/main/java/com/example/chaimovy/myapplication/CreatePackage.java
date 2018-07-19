@@ -101,8 +101,9 @@ public class CreatePackage extends AppCompatActivity {
                         try
                         {
                             TransactionReceipt txRecp = pMan.createPackage(sellerAddrStr,carrierAddrStr,BuyerAddrStr,dispResAddrstr,merchValueInt,shippigFeeInt,TO1Int,TO2Int).send();
-                            String txReciept = txRecp.toString();//.getLogs().get(0).getData();
-                            createPackageBt.setText(txReciept);
+
+                            String newPkgAddr = txRecp.getLogs().get(0).getData();
+                            createPackageBt.setText(newPkgAddr);
 
                         }
                         catch (Exception e){
