@@ -79,7 +79,6 @@ public class CreatePackage extends AppCompatActivity {
         BigInteger myBalance = ethGetBalance.getBalance();
 //        Credentials myCred=Credentials.create(myKey,myAddr);
 
-        ExceptionText = (EditText)findViewById(R.id.debug_exception);
 
         String account ="";
         Credentials myCred= null;
@@ -110,14 +109,30 @@ public class CreatePackage extends AppCompatActivity {
         TO2            = (EditText)findViewById(R.id.TO2Text);
         initialPayment = (EditText)findViewById(R.id.initialPaymentText);
 
+
+        ExceptionText = (EditText)findViewById(R.id.debug_exception);
         AddrKey = (EditText)findViewById(R.id.debug_addr_key);
 
 
         AddrKey.setText("addr: " + myAddr + ", key: " + myKey);
 
-        final Button createPackageBt  = (Button)findViewById(R.id.CreateNewPkgBt);
+        try {
+            Web3j web33 = Web3jFactory.build(new HttpService("https://rinkeby.infura.io/06KZcq3hzQMYyXUurR9q"));
 
 
+            EthGetBalance ethGetBalance = web33.ethGetBalance("0x175A2e653C2bf106Ac1a061f26738A61ADC91C1d", DefaultBlockParameterName.LATEST).sendAsync().get();
+
+            String wei = ethGetBalance.getBalance().toString();
+
+
+            ExceptionText.setText(Convert.fromWei(wei, Convert.Unit.ETHER).toString());
+
+
+        }
+        catch (Exception e){
+            ExceptionText.setText(e.toString());
+        }
+        final Button createPackageBt = (Button) findViewById(R.id.CreateNewPkgBt);
         createPackageBt.setOnClickListener(new View.OnClickListener()
                 {
                     @Override
@@ -151,7 +166,6 @@ public class CreatePackage extends AppCompatActivity {
                             //TransactionReceipt txRecp = pMan.createPackage(sellerAddrStr,carrierAddrStr,BuyerAddrStr,dispResAddrstr,merchValueInt,shippigFeeInt,TO1Int,TO2Int).send();
 
                             //String newPkgAddr = txRecp.getLogs().get(0).getData();
-                            Web3j web33 = Web3jFactory.build(new HttpService("https://rinkeby.infura.io/06KZcq3hzQMYyXUurR9q"));
                             //String account1 ="";
                             //Credentials myCred1= null;
                             //account1 = web33.ethAccounts().send().getAccounts().get(0);
@@ -161,15 +175,7 @@ public class CreatePackage extends AppCompatActivity {
 
 
 
-                            EthGetBalance ethGetBalance = web33
-                                    .ethGetBalance("0x175A2e653C2bf106Ac1a061f26738A61ADC91C1d", DefaultBlockParameterName.LATEST)
-                                    .sendAsync()
-                                    .get();
 
-                            String wei = ethGetBalance.getBalance().toString();
-
-
-                            ExceptionText.setText(Convert.fromWei(wei,Convert.Unit.ETHER).toString());
 
                         }
                         catch (Exception e){
