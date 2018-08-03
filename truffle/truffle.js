@@ -1,5 +1,5 @@
 var HDWalletProvider = require("truffle-hdwallet-provider");
-var mnemonic = "want sorry dawn anxiety poverty armed recycle exchange jungle owner tooth wage"
+var mnemonic = "float jazz endorse army split patch six deny law bicycle route sing"
 
 module.exports = {
   // See <http://truffleframework.com/docs/advanced/configuration>
@@ -21,7 +21,13 @@ module.exports = {
             return new HDWalletProvider(mnemonic, "https://ropsten.infura.io/06KZcq3hzQMYyXUurR9q")
           },
           network_id: 3
-        }
+      },
+    rinkeby: {
+        provider: function() {
+              return new HDWalletProvider(mnemonic, "https://rinkeby.infura.io/06KZcq3hzQMYyXUurR9q")
+        },
+        network_id: 3
+    }
   }
 };
 

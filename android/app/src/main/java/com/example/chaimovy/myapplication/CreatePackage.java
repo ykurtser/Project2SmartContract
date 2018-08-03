@@ -8,22 +8,14 @@ import android.widget.EditText;
 
 import com.example.chaimovy.P2PackageManager;
 
-import org.web3j.crypto.Credentials;
-import org.web3j.crypto.ECKeyPair;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.Web3jFactory;
 import org.web3j.protocol.core.DefaultBlockParameterName;
-import org.web3j.protocol.core.RemoteCall;
 import org.web3j.protocol.core.methods.response.EthGetBalance;
-import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.http.HttpService;
-import org.web3j.tx.Transfer;
 import org.web3j.utils.Convert;
 
-import java.io.IOException;
-import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.concurrent.ExecutionException;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -65,6 +57,7 @@ public class CreatePackage extends AppCompatActivity {
             throw  new IllegalArgumentException();
         }
 
+        /*
         Web3j web3 = Web3jFactory.build(new HttpService("http://10.0.2.2:7545"));
         EthGetBalance ethGetBalance=null;
         try {
@@ -105,7 +98,7 @@ public class CreatePackage extends AppCompatActivity {
 
         pMan = P2PackageManager.load(getString(R.string.packageManagerAddr), web3, myCred, new BigInteger("90990051782"), myBalance);
 
-
+*/
         //set objects to all buttons/textviews
         buyerAddr      = (EditText)findViewById(R.id.buyerAddrText);
         sellerAddr     = (EditText)findViewById(R.id.SellerAddrText);
@@ -158,15 +151,25 @@ public class CreatePackage extends AppCompatActivity {
                             //TransactionReceipt txRecp = pMan.createPackage(sellerAddrStr,carrierAddrStr,BuyerAddrStr,dispResAddrstr,merchValueInt,shippigFeeInt,TO1Int,TO2Int).send();
 
                             //String newPkgAddr = txRecp.getLogs().get(0).getData();
-                            Web3j web33 = Web3jFactory.build(new HttpService("http://10.0.2.2:7545"));
-                            String account1 ="";
-                            Credentials myCred1= null;
-                            account1 = web33.ethAccounts().send().getAccounts().get(0);
-                            myCred1 = Credentials.create(account1);
+                            Web3j web33 = Web3jFactory.build(new HttpService("https://rinkeby.infura.io/06KZcq3hzQMYyXUurR9q"));
+                            //String account1 ="";
+                            //Credentials myCred1= null;
+                            //account1 = web33.ethAccounts().send().getAccounts().get(0);
+                            //myCred1 = Credentials.create("");
 
-                            RemoteCall<TransactionReceipt> tr = Transfer.sendFunds(web33,myCred1,"0x52DF6906851A5CaEE19CDC6442d296D952338a0a", BigDecimal.valueOf(1.0), Convert.Unit.ETHER);
+                            //RemoteCall<TransactionReceipt> tr = Transfer.sendFunds(web33,myCred1,"0x52DF6906851A5CaEE19CDC6442d296D952338a0a", BigDecimal.valueOf(1.0), Convert.Unit.ETHER);
 
-                            ExceptionText.setText(account1);
+
+
+                            EthGetBalance ethGetBalance = web33
+                                    .ethGetBalance("0x175A2e653C2bf106Ac1a061f26738A61ADC91C1d", DefaultBlockParameterName.LATEST)
+                                    .sendAsync()
+                                    .get();
+
+                            String wei = ethGetBalance.getBalance().toString();
+
+
+                            ExceptionText.setText(Convert.fromWei(wei,Convert.Unit.ETHER).toString());
 
                         }
                         catch (Exception e){
