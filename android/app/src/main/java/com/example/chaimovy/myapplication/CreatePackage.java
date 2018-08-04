@@ -8,13 +8,16 @@ import android.widget.EditText;
 
 import com.example.chaimovy.P2PackageManager;
 
+import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.Web3jFactory;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.methods.response.EthGetBalance;
+import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.http.HttpService;
 import org.web3j.utils.Convert;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -95,10 +98,10 @@ public class CreatePackage extends AppCompatActivity {
 
 
 
-        pMan = P2PackageManager.load(getString(R.string.packageManagerAddr), web3, myCred, new BigInteger("90990051782"), myBalance);
 
 */
         //set objects to all buttons/textviews
+
         buyerAddr      = (EditText)findViewById(R.id.buyerAddrText);
         sellerAddr     = (EditText)findViewById(R.id.SellerAddrText);
         dispResAddr    = (EditText)findViewById(R.id.DisputeResolverAddrText);
@@ -128,10 +131,63 @@ public class CreatePackage extends AppCompatActivity {
             ExceptionText.setText(Convert.fromWei(wei, Convert.Unit.ETHER).toString());
 
 
+            String BuyerAddrStr = "0x5E46aef5B1ce6C86aF9B27B10f011d4A2348D1ec";
+            String sellerAddrStr = "0x52DF6906851A5CaEE19CDC6442d296D952338a0a";
+            String dispResAddrstr = "0x780E9bDC47Ef692116B76f40aa2Ed7bd7bB70Ef4";
+            String carrierAddrStr = "0x780E9bDC47Ef692116B76f40aa2Ed7bd7bB70Ef4";
+            BigInteger shippigFeeInt = new BigInteger("999999999");
+            BigInteger merchValueInt = new BigInteger("999999998");
+            BigInteger TO1Int = new BigInteger("2");
+            BigInteger TO2Int = new BigInteger("3");
+            BigInteger initialPaymentInt = new BigInteger("0");
+
+            Credentials myCred= Credentials.create("0x517ab26d369ac2add9124fc464e818be788e08492c3f5fa516456973b1ec6e43");;
+
+
+            BigInteger gasPrice= Convert.toWei("0.0000001", Convert.Unit.ETHER).toBigInteger();
+            BigInteger gasLimit = new BigDecimal("6721975").toBigInteger();
+
+            pMan = P2PackageManager.load(getString(R.string.packageManagerAddr), web33, myCred, gasPrice, gasLimit);
+            pman.se
+
+            TransactionReceipt txRecp = pMan.createCarrier().sendAsync().get();
+
+            ExceptionText.setText(pMan.getContractCreatedEvents(txRecp).get(0).addr);
+
+            /*
+            String Owner = pMan.getOwner().sendAsync().get();
+
+            ExceptionText.setText(Owner);
+
+            TransactionReceipt txRecp = pMan.createPackage(sellerAddrStr, carrierAddrStr, BuyerAddrStr, dispResAddrstr, merchValueInt, shippigFeeInt, TO1Int, TO2Int).send();
+
+
+
+            int numOfLogs = txRecp.getLogs().size();
+            int i=0;
+            String AllLogs = "";
+            while (i<numOfLogs){
+                AllLogs += "#" + i + ": " + txRecp.getLogs().get(i).toString() + "       ";
+                i++;
+            }
+            ExceptionText.setText(pMan.getContractCreatedEvents(txRecp).get(0).addr);
+
+*/
+
+            //String newPkgAddr = txRecp.getLogs().get(0).getData();
+            //String account1 ="";
+            //
+            //account1 = web33.ethAccounts().send().getAccounts().get(0);
+            //myCred1 =
+
+            //RemoteCall<TransactionReceipt> tr = Transfer.sendFunds(web33,myCred1,"0x52DF6906851A5CaEE19CDC6442d296D952338a0a", BigDecimal.valueOf(1.0), Convert.Unit.ETHER);
+
         }
         catch (Exception e){
             ExceptionText.setText(e.toString());
         }
+
+
         final Button createPackageBt = (Button) findViewById(R.id.CreateNewPkgBt);
         createPackageBt.setOnClickListener(new View.OnClickListener()
                 {
