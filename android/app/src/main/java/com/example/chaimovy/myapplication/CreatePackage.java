@@ -120,7 +120,7 @@ public class CreatePackage extends AppCompatActivity {
         AddrKey.setText("addr: " + myAddr + ", key: " + myKey);
 
         try {
-            Web3j web33 = Web3jFactory.build(new HttpService("https://rinkeby.infura.io/06KZcq3hzQMYyXUurR9q"));
+            Web3j web33 = Web3jFactory.build(new HttpService("https://ropsten.infura.io/06KZcq3hzQMYyXUurR9q"));
 
 
             EthGetBalance ethGetBalance = web33.ethGetBalance("0x175A2e653C2bf106Ac1a061f26738A61ADC91C1d", DefaultBlockParameterName.LATEST).sendAsync().get();
@@ -141,18 +141,23 @@ public class CreatePackage extends AppCompatActivity {
             BigInteger TO2Int = new BigInteger("3");
             BigInteger initialPaymentInt = new BigInteger("0");
 
-            Credentials myCred= Credentials.create("0x517ab26d369ac2add9124fc464e818be788e08492c3f5fa516456973b1ec6e43");;
+                    //0x517ab26d369ac2add9124fc464e818be788e08492c3f5fa516456973b1ec6e43 yuval account (package manager owner)
+            //e995e2b620a0637d164560f902d1a33a53bbdca5fef9afb6794e3174626b6185 my account
+            //
+            Credentials myCred= Credentials.create("e995e2b620a0637d164560f902d1a33a53bbdca5fef9afb6794e3174626b6185");
 
 
             BigInteger gasPrice= Convert.toWei("0.0000001", Convert.Unit.ETHER).toBigInteger();
             BigInteger gasLimit = new BigDecimal("6721975").toBigInteger();
 
-            pMan = P2PackageManager.load(getString(R.string.packageManagerAddr), web33, myCred, gasPrice, gasLimit);
-            pman.se
+            pMan = P2PackageManager.load(getString(R.string.packageManagerAddrRopsten), web33, myCred, gasPrice, gasLimit);
+
 
             TransactionReceipt txRecp = pMan.createCarrier().sendAsync().get();
+            //TransactionReceipt txRecp2 = pMan.claimExcessEth().sendAsync().get();
 
             ExceptionText.setText(pMan.getContractCreatedEvents(txRecp).get(0).addr);
+            //ExceptionText.setText(txRecp2.toString());
 
             /*
             String Owner = pMan.getOwner().sendAsync().get();
