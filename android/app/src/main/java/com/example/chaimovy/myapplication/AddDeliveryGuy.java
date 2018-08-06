@@ -1,3 +1,6 @@
+//CODING TODO
+//DESIGN TODO
+
 package com.example.chaimovy.myapplication;
 
 import android.os.Bundle;

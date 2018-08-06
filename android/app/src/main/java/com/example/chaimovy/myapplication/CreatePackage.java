@@ -1,3 +1,6 @@
+// CODING: SHOULD BE READY, NEEDS CODE REVIEW AND MANUAL TEST
+// DESING: TODO
+
 package com.example.chaimovy.myapplication;
 
 import android.content.Context;

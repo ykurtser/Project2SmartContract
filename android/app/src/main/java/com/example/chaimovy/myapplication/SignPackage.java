@@ -1,3 +1,6 @@
+// CODING: TODO + ADD QR MODULE
+// DESING: TODO
+
 package com.example.chaimovy.myapplication;
 
 import android.os.Bundle;

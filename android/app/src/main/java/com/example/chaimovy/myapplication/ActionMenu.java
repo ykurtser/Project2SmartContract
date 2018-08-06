@@ -1,3 +1,6 @@
+// CODING: DONE IF NO FURTHER FEATURES
+//DESING TODO
+
 package com.example.chaimovy.myapplication;
 
 import android.content.Intent;

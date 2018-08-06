@@ -1,3 +1,6 @@
+// CODING: DONE.
+// DESING: TODO
+
 package com.example.chaimovy.myapplication;
 
 import android.content.Context;
