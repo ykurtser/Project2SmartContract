@@ -12,27 +12,19 @@
     tools:context=".CreatePackage">
 
     <!-- Login progress -->
-    <ProgressBar
-        android:id="@+id/login_progress"
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:visibility="gone" />
 
     <EditText
-        android:id="@+id/debug_addr_key"
+        android:id="@+id/CreatePkgAddrText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPersonName" />
 
-    <EditText
-        android:id="@+id/debug_exception"
+    <Button
+        android:id="@+id/FillDefaultCreatePkg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName" />
+        android:text="fill defaults" />
 
     <ScrollView
         android:id="@+id/login_form"

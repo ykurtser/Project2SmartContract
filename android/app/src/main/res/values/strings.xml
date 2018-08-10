@@ -21,4 +21,8 @@
     <string name="packageManagerAddrRopsten">0x35ef91133eea5dd5d155f18b1dc8af57c3cc82a4</string>
     <string name="gasPrice">100000000000</string>
     <string name="gasLimit">6721975</string>
+
+    <string name="debugAddr">0x175A2e653C2bf106Ac1a061f26738A61ADC91C1d</string>
+    <string name="debugKey">0x517ab26d369ac2add9124fc464e818be788e08492c3f5fa516456973b1ec6e43</string>
+    <string name="debugCarrier">0xbe262b2653cdddd69ff09e84b8b6ec374146293d</string>
 </resources>

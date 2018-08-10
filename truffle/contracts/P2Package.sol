@@ -308,6 +308,7 @@ contract P2Package {
     {
         return (trajectory);
     }
+
     function getTrajectoryI(uint i)
     public
     view

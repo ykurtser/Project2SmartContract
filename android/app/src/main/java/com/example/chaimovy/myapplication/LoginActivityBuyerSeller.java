@@ -35,6 +35,7 @@ public class LoginActivityBuyerSeller extends AppCompatActivity {
             public void onClick(View v) {
                 editor.putString("addr",PublicAddText.getText().toString());
                 editor.putString("key",PrivateKeyText.getText().toString());
+                editor.apply();
 
                 Intent I = new Intent(getApplicationContext(), ActionMenu.class);
 

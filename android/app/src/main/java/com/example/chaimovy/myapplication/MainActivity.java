@@ -10,10 +10,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import org.web3j.protocol.Web3j;
-import org.web3j.protocol.Web3jFactory;
-import org.web3j.protocol.http.HttpService;
-
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -22,12 +18,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Web3j web3 = Web3jFactory.build(new HttpService("http://10.0.2.2:7545"));
-        Button BuyerSellerBt = findViewById(R.id.BuyerSellerBt);
-        Button DeliveryManagerBt = findViewById(R.id.DeliveryManagerBt);
-        Button DeliveryGuyBt = findViewById(R.id.DeliveryGuyBt);
 
-        SharedPreferences SharedPref = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
+        Button BuyerSellerBt = findViewById(R.id.buyerSellerBt);
+        Button DeliveryManagerBt = findViewById(R.id.deliveryManagerBt);
+        Button DeliveryGuyBt = findViewById(R.id.deliveryGuyBt);
+
+        SharedPreferences SharedPref = getApplicationContext().getSharedPreferences("userInfo", Context.MODE_PRIVATE);
         final SharedPreferences.Editor editor = SharedPref.edit();
 
         BuyerSellerBt.setOnClickListener(new View.OnClickListener(){
