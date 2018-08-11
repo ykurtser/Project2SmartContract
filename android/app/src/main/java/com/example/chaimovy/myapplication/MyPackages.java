@@ -13,6 +13,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.web3j.utils.Convert;
+
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -50,8 +52,6 @@ public class MyPackages extends Web3Activity {
             initViews();
             pMan = P2PackageManager.load(getString(R.string.packageManagerAddrRopsten), web3, myCred, gasPrice, gasLimit);
 
-            debugText.setText("addr: " + myAddr + " key: " + myKey);
-
             fillSpinner();
 
             showPkgBt.setOnClickListener(new View.OnClickListener()
@@ -66,36 +66,50 @@ public class MyPackages extends Web3Activity {
                     String CarrierAddr = SharedPrefpkgInfo.getString("carrierAddr", "");
                     String BuyerAddr = SharedPrefpkgInfo.getString("buyerAddr", "");
                     String DispResolvAddr = SharedPrefpkgInfo.getString("dispResolvAddr", "");
-                    String ShippingFee = SharedPrefpkgInfo.getString("shippingFee", "");
-                    String MerchVal = SharedPrefpkgInfo.getString("merchVal", "");
+                    String ShippingFeeWei = SharedPrefpkgInfo.getString("shippingFee", "");
+                    String MerchValWei = SharedPrefpkgInfo.getString("merchVal", "");
 
+                    String ShippingFeeEther = Convert.fromWei(ShippingFeeWei,Convert.Unit.ETHER).toString();
+                    String MerchValEther = Convert.fromWei(MerchValWei,Convert.Unit.ETHER).toString();
 
-                    pkgSellerAddr.setText(SellerAddr);
-                    pkgCarrierAddr.setText(CarrierAddr);
-                    pkgBuyerAddr.setText(BuyerAddr);
-                    pkgDispResolvAddr.setText(DispResolvAddr);
-                    pkgShippingFee.setText(ShippingFee);
-                    pkgMerchVal.setText(MerchVal);
+                    pkgSellerAddr.setText("Seller addr: " + SellerAddr);
+                    pkgCarrierAddr.setText("Carrier addr: " + CarrierAddr);
+                    pkgBuyerAddr.setText("Buyer addr: " + BuyerAddr);
+                    pkgDispResolvAddr.setText("Dispute resolver addr: " + DispResolvAddr);
+                    pkgShippingFee.setText("Shipping fee: " + ShippingFeeEther + " Ether");
+                    pkgMerchVal.setText("Merchedise value: " + MerchValEther + " Ether");
 
-                    /*try {
+                    try {
                         P2Package pkg = P2Package.load(chosenPkg, web3, myCred, gasPrice, gasLimit);
+                        String SellerLeftToPayWei = pkg.getSellerStake().send().subtract(pkg.getAmmountSeller().send()).toString();
+                        String BuyerLeftToPayWei = pkg.getBuyerStake().send().subtract(pkg.getAmmountBuyer().send()).toString();
+                        String CarrierLeftToPayWei = pkg.getCarrierStake().send().subtract(pkg.getAmmountCarrier().send()).toString();
+                        String State = getStateString(Integer.parseInt(pkg.getState().send().toString()));
 
-                        String SellerLeftToPay = pkg.getAmmountSeller().toString();
-                        String BuyerLeftToPay = pkg.getAmmountBuyer().toString();
-                        String CarrierLeftToPay = pkg.getAmmountCarrier().toString();
-                        String State = getStateString(Integer.parseInt(pkg.getState().toString()));
+                        String SellerLeftToPayEther = Convert.fromWei(SellerLeftToPayWei,Convert.Unit.ETHER).toString();
+                        String BuyerLeftToPayEther = Convert.fromWei(BuyerLeftToPayWei,Convert.Unit.ETHER).toString();
+                        String CarrierLeftToPayEther = Convert.fromWei(CarrierLeftToPayWei,Convert.Unit.ETHER).toString();
 
-                        //pkgTrajectory = pkg.; TODO deploy contract with get traj.
 
-                        pkgSellerLeftToPay.setText(SellerLeftToPay);
-                        pkgBuyerLeftToPay.setText(BuyerLeftToPay);
-                        pkgCarrierLeftToPay.setText(CarrierLeftToPay);
-                        pkgState.setText(State);
+                        //List<String> traj= pkg.getTrajectory().send();
+                        //ArrayAdapter<String> dataAdapter = new ArrayAdapter(getBaseContext(),R.layout.support_simple_spinner_dropdown_item,traj.toArray());
+                        //dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        //pkgsSpinner.setAdapter(dataAdapter);
+
+
+                        pkgSellerLeftToPay.setText("Seller to pay: " + SellerLeftToPayEther + " Ether");
+                        pkgBuyerLeftToPay.setText("Buyer to pay: " + BuyerLeftToPayEther + " Ether");
+                        pkgCarrierLeftToPay.setText("Carrier to pay: " + CarrierLeftToPayEther + " Ether");
+                        pkgState.setText("Package state: " + State);
+
                     } catch (Error e) {
-                        pkgState.setText("Delivered");
+                        debugText.setText("Delivered");
+                    }
+                    catch (Exception e) {
+                        debugText.setText("Error: " + e.getMessage());
                     }
 
-                    */
+
                 }
             });
 
