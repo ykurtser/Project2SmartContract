@@ -9,21 +9,25 @@ contract P2Package {
 	address carrier;
 	address buyer;
 	address disputeResolver;
-    address packageManger;
-	uint merchValue;           //[wei]
-	uint shippingFee;          //[wei]
-	uint ammountBuyer;         //[wei]
-	uint ammountCarrier;       //[wei]
-	uint ammountSeller;        //[wei]
+  address packageManger;
+	uint merchValue;           //merchandise value [wei]
+	uint shippingFee;          //shipping fee [wei]
+	uint ammountBuyer;         //current ammount payed by buyer [wei]
+	uint ammountCarrier;       //current ammount payed by carrier[wei]
+	uint ammountSeller;        //current ammount payed by seller[wei]
 	uint creationTime;
-	uint arrivalTO;            //[days]
-	uint waitingForStakesInTO ;//[days]
+	uint arrivalTO;            // maximum time to package arrival [days]
+	uint waitingForStakesInTO ;//maximum time to make payments [days]
 	string[] trajectory;
 	uint numOfSig; //number of stations allong pakage route
     event uintFieldAssigned(string fieldName, uint value);  //Debug event
     event changedState(uint currState);  //Debug event
 
-	// Contract constructor set initials Values
+    /********************************************************************************************************************************
+    * requires: merchValue >=0, shippingFee>=0, ArrivalTO >=0, WaitingForStakesInTO  >=0
+    * modifies: a transaction, changes blockchain state
+    * effects: create a new package contract, if ether was sent resolvePayment
+    *********************************************************************************************************************************/
 	constructor(address PkgCreator,address Seller,address Carrier,address Buyer,address DisputeResolver,uint MerchValue,uint ShippingFee, uint ArrivalTO, uint WaitingForStakesInTO) public payable
 	{
 	    seller = Seller;
@@ -74,7 +78,10 @@ contract P2Package {
         }
         _;
     }
-
+    /********************************************************************************************************************************
+    * modifies: this
+    * effects: if payer is one of known addressess (buyer,carrier,seller), update the correspondant amounnt paid
+    *********************************************************************************************************************************/
     function resolvePayment(address payer) private
     {
         if (payer == buyer)
@@ -91,21 +98,30 @@ contract P2Package {
         }
 
     }
-
+    /********************************************************************************************************************************
+    * modifies: this
+    * effects: move to next state
+    *********************************************************************************************************************************/
     function changeState() private
     {
         state = State(uint(state) + 1);
         emit changedState(uint(state));
     }
 
-	//pay to contract, check who paid, update amount paid then change state
+    /********************************************************************************************************************************
+    * modifies: this
+    * effects: recieve ether, resolvePayment, change state if all stakes paid
+    *********************************************************************************************************************************/
     function () public payable {
 	    resolvePayment(msg.sender);
 	    //check if everybody paid, package ready for shipping
 	    if (ammountBuyer >= getBuyerStake() && ammountSeller >= getSellerStake() && ammountCarrier >= getCarrierStake() && state == State.WaitingForStakesIn)
 	        changeState();
 	}
-
+  /********************************************************************************************************************************
+  * modifies: this, a transaction, changes blockchain state
+  * effects: if message sender  is buyer, terminateNormal(), if message sender  is seller, terminateReturned(), update packegae trajectory
+  *********************************************************************************************************************************/
 	function signPackage(string location) public timedTransitions() { //TODO MAKE CONDITIONS MORE READABLE
 	    require( state == State.Shipped && (msg.sender == carrier || msg.sender==buyer) || state == State.Returned && (msg.sender == carrier || msg.sender==seller));
         if (msg.sender == seller)
@@ -116,7 +132,10 @@ contract P2Package {
 	    trajectory[numOfSig] = location;
 	    numOfSig++;
 	}
-
+  /********************************************************************************************************************************
+  * modifies: this, a transaction, changes blockchain state
+  * effects: chnages package state to returned, refund buyer with merchandis Value, pay shipping fee to carrier, change state
+  *********************************************************************************************************************************/
 	function returnPackage(string reason) public atState(State.Shipped){
 	    require(msg.sender == buyer);
 	    trajectory[numOfSig]  = reason; //todo: manage history of trajectory in array of strings
@@ -127,13 +146,20 @@ contract P2Package {
 	    carrier.transfer(shippingFee);
 	    ammountCarrier-=shippingFee;
 	}
-
+  /********************************************************************************************************************************
+  * modifies: this, a transaction, changes blockchain state
+  * effects: if message sender is carrier, change  state
+  *********************************************************************************************************************************/
   function openDispute() public atState(State.Returned) {
     require(msg.sender == carrier);
     changeState();
     //todo: think of what message we actualy send  to disputeResolver
 
   }
+  /********************************************************************************************************************************
+  * modifies: this, a transaction, changes blockchain state
+  * effects: tranfer sellers cut to seller, (1-sellersCut) to carrier, then self destruct
+  *********************************************************************************************************************************/
  function resolveDispute(uint sellersCut) public atState(State.UnderDispute){
    require(msg.sender == disputeResolver);
    seller.transfer(uint(( getDisputeFullAmmount() * sellersCut)/100));
@@ -141,17 +167,27 @@ contract P2Package {
    selfdestruct(packageManger);
 
  }
-
+ /********************************************************************************************************************************
+ * modifies: this, a transaction, changes blockchain state
+ * effects: transfer the agreed ammounts to seller and carrier, then self destruct
+ *********************************************************************************************************************************/
  function terminateNormal() private atState(State.Shipped){
    seller.transfer(merchValue+shippingFee);
    carrier.transfer(merchValue+2*shippingFee);
    selfdestruct(packageManger);
  }
+ /********************************************************************************************************************************
+ * modifies: this, a transaction, changes blockchain state
+ * effects: transfer the deposits carrier, then self destruct
+ *********************************************************************************************************************************/
  function terminateReturned() private atState(State.Returned){
    carrier.transfer(merchValue+3*shippingFee);
    selfdestruct(packageManger);
  }
-
+ /********************************************************************************************************************************
+ * modifies: this, a transaction, changes blockchain state
+ * effects: transfer all parties ammounts paid, then self destruct
+ *********************************************************************************************************************************/
  function terminateNotShipped() private atState(State.WaitingForStakesIn){
    if (ammountCarrier>0)
    {
@@ -167,15 +203,21 @@ contract P2Package {
    }
    selfdestruct(packageManger);
  }
-
+ /********************************************************************************************************************************
+ * modifies: this, a transaction, changes blockchain state
+ * effects: transfer refund to buyer, deposits to seller, then self destruct
+ *********************************************************************************************************************************/
  function terminateLost() private atState(State.Shipped){
    buyer.transfer(ammountBuyer);
    seller.transfer(ammountCarrier+ammountSeller);
    selfdestruct(packageManger);
  }
-
+ /********************************************************************************************************************************
+ * modifies: this, a transaction, changes blockchain state
+ * effects: transfer the agreed ammounts to carrier, then self destruct
+ *********************************************************************************************************************************/
  function terminateOnReturn() private atState(State.Returned){
-   seller.transfer(ammountCarrier+ammountSeller);
+   carrier.transfer(ammountCarrier+ammountSeller);
    selfdestruct(packageManger);
  }
 

@@ -17,11 +17,18 @@ contract P2Carrier is P2Ownable{
     public {
         DeliveryStations.insert(_owner);
     }
+    /********************************************************************************************************************************
+    * modifies: a transaction, changes blockchain state
+    * effects: default function to accept ether transfered to contract
+    *********************************************************************************************************************************/
     function () public payable
     {
 
     }
-
+    /********************************************************************************************************************************
+    * modifies: a transaction, changes blockchain state
+    * effects: add delivery station to set of autorized signers
+    *********************************************************************************************************************************/
     function addDeliveryStation(address station)
     public
     onlyOwner()
@@ -29,7 +36,10 @@ contract P2Carrier is P2Ownable{
         emit DeliveryStationAdded(station);
         DeliveryStations.insert(station);
     }
-
+    /********************************************************************************************************************************
+    * modifies: a transaction, changes blockchain state
+    * effects: remove delivery station to set of autorized signers
+    *********************************************************************************************************************************/
     function removeDeliveryStation(address station)
     public
     onlyOwner()
@@ -37,19 +47,29 @@ contract P2Carrier is P2Ownable{
         emit DeliveryStationRemoved(station);
         DeliveryStations.remove(station);
     }
+
+    /********************************************************************************************************************************
+    * modifies: a transaction, changes blockchain state
+    * effects: tranfer funds to a package
+    *********************************************************************************************************************************/
     function sendFundsToPackage(address pkg, uint ammount)
     public
     onlyOwner()
     {
         pkg.transfer(ammount);
     }
-
+    /********************************************************************************************************************************
+    * modifies: a transaction, changes blockchain state
+    * effects: sign a package
+    *********************************************************************************************************************************/
     function signPackage(P2Package pkg, string location)
     public {
         require(DeliveryStations.contains(msg.sender));
         emit PackageSigned(msg.sender,pkg,location);
         pkg.signPackage(location);
     }
+
+    // get conract carrier
     function getOwner()
     public
     view
@@ -57,6 +77,8 @@ contract P2Carrier is P2Ownable{
     {
         return (owner);
     }
+    
+    // check if station exist in the autohrized signers set
     function containsStation(address station)
     public
     view
