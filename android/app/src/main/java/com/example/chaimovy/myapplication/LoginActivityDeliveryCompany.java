@@ -12,7 +12,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.chaimovy.P2PackageManager;
 
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;

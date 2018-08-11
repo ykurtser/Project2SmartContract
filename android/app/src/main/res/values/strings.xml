@@ -18,7 +18,7 @@
     <string name="web3HostRinkeby">https://rinkeby.infura.io/06KZcq3hzQMYyXUurR9q</string>
     <string name="web3HostRopsten">https://ropsten.infura.io/06KZcq3hzQMYyXUurR9q</string>
     <string name="packageManagerAddrRinkeby">0x7ca846b6d52ccec650187e5ed8e793701de4d00e</string>
-    <string name="packageManagerAddrRopsten">0x35ef91133eea5dd5d155f18b1dc8af57c3cc82a4</string>
+    <string name="packageManagerAddrRopsten">0x51c6f450d4ebd98177d441ad896a3ed84f859909</string>
     <string name="gasPrice">100000000000</string>
     <string name="gasLimit">6721975</string>
 

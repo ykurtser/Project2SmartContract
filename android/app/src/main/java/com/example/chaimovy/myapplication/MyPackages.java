@@ -13,9 +13,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.chaimovy.P2Package;
-import com.example.chaimovy.P2PackageManager;
-
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -65,12 +62,13 @@ public class MyPackages extends Web3Activity {
                     String chosenPkg = pkgsSpinner.getSelectedItem().toString();
                     SharedPreferences SharedPrefpkgInfo = getSharedPreferences(chosenPkg, Context.MODE_PRIVATE);
 
-                    String SellerAddr = SharedPrefpkgInfo.getString("SellerAddr", "");
-                    String CarrierAddr = SharedPrefpkgInfo.getString("CarrierAddr", "");
-                    String BuyerAddr = SharedPrefpkgInfo.getString("BuyerAddr", "");
-                    String DispResolvAddr = SharedPrefpkgInfo.getString("DispResolvAddr", "");
-                    String ShippingFee = SharedPrefpkgInfo.getString("ShippingFee", "");
-                    String MerchVal = SharedPrefpkgInfo.getString("MerchVal", "");
+                    String SellerAddr = SharedPrefpkgInfo.getString("sellerAddr", "");
+                    String CarrierAddr = SharedPrefpkgInfo.getString("carrierAddr", "");
+                    String BuyerAddr = SharedPrefpkgInfo.getString("buyerAddr", "");
+                    String DispResolvAddr = SharedPrefpkgInfo.getString("dispResolvAddr", "");
+                    String ShippingFee = SharedPrefpkgInfo.getString("shippingFee", "");
+                    String MerchVal = SharedPrefpkgInfo.getString("merchVal", "");
+
 
                     pkgSellerAddr.setText(SellerAddr);
                     pkgCarrierAddr.setText(CarrierAddr);
@@ -79,7 +77,7 @@ public class MyPackages extends Web3Activity {
                     pkgShippingFee.setText(ShippingFee);
                     pkgMerchVal.setText(MerchVal);
 
-                    try {
+                    /*try {
                         P2Package pkg = P2Package.load(chosenPkg, web3, myCred, gasPrice, gasLimit);
 
                         String SellerLeftToPay = pkg.getAmmountSeller().toString();
@@ -96,6 +94,8 @@ public class MyPackages extends Web3Activity {
                     } catch (Error e) {
                         pkgState.setText("Delivered");
                     }
+
+                    */
                 }
             });
 
@@ -183,11 +183,9 @@ public class MyPackages extends Web3Activity {
 
         Set<String> pkgs = new HashSet<>();
         pkgs = SharedPref.getStringSet(myAddr,pkgs);
-        String pkgsList[] = new String[pkgs.size()];
 
-        pkgs.toArray();
 
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,R.layout.support_simple_spinner_dropdown_item,pkgsList);
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter(this,R.layout.support_simple_spinner_dropdown_item,pkgs.toArray());
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         pkgsSpinner.setAdapter(dataAdapter);
 
