@@ -22,10 +22,10 @@ import java.util.Set;
 public class MyPackages extends Web3Activity {
 
     Spinner pkgsSpinner;
-    Spinner  pkgTrajectory;
+    Spinner pkgTrajectory;
 
     Button showPkgBt;
-    Button   addPkgBt;
+    Button addPkgBt;
 
     TextView pkgSellerAddr;
     TextView pkgCarrierAddr;
@@ -69,8 +69,8 @@ public class MyPackages extends Web3Activity {
                     String ShippingFeeWei = SharedPrefpkgInfo.getString("shippingFee", "");
                     String MerchValWei = SharedPrefpkgInfo.getString("merchVal", "");
 
-                    String ShippingFeeEther = Convert.fromWei(ShippingFeeWei,Convert.Unit.ETHER).toString();
-                    String MerchValEther = Convert.fromWei(MerchValWei,Convert.Unit.ETHER).toString();
+                    String ShippingFeeEther = Convert.fromWei(ShippingFeeWei, Convert.Unit.ETHER).toString();
+                    String MerchValEther = Convert.fromWei(MerchValWei, Convert.Unit.ETHER).toString();
 
                     pkgSellerAddr.setText("Seller addr: " + SellerAddr);
                     pkgCarrierAddr.setText("Carrier addr: " + CarrierAddr);
@@ -86,9 +86,9 @@ public class MyPackages extends Web3Activity {
                         String CarrierLeftToPayWei = pkg.getCarrierStake().send().subtract(pkg.getAmmountCarrier().send()).toString();
                         String State = getStateString(Integer.parseInt(pkg.getState().send().toString()));
 
-                        String SellerLeftToPayEther = Convert.fromWei(SellerLeftToPayWei,Convert.Unit.ETHER).toString();
-                        String BuyerLeftToPayEther = Convert.fromWei(BuyerLeftToPayWei,Convert.Unit.ETHER).toString();
-                        String CarrierLeftToPayEther = Convert.fromWei(CarrierLeftToPayWei,Convert.Unit.ETHER).toString();
+                        String SellerLeftToPayEther = Convert.fromWei(SellerLeftToPayWei, Convert.Unit.ETHER).toString();
+                        String BuyerLeftToPayEther = Convert.fromWei(BuyerLeftToPayWei, Convert.Unit.ETHER).toString();
+                        String CarrierLeftToPayEther = Convert.fromWei(CarrierLeftToPayWei, Convert.Unit.ETHER).toString();
 
 
                         //List<String> traj= pkg.getTrajectory().send();
@@ -104,8 +104,7 @@ public class MyPackages extends Web3Activity {
 
                     } catch (Error e) {
                         debugText.setText("Delivered");
-                    }
-                    catch (Exception e) {
+                    } catch (Exception e) {
                         debugText.setText("Error: " + e.getMessage());
                     }
 
@@ -146,66 +145,68 @@ public class MyPackages extends Web3Activity {
                         pkgsEditor.putStringSet(myAddr, pkgs);
                         pkgsEditor.apply();
                     } catch (Error e) {
-                        Toast toast = Toast.makeText(getBaseContext(), "couldn't load pkg with that addr", Toast.LENGTH_LONG);
+                        Toast.makeText(getBaseContext(), "couldn't load pkg with that addr", Toast.LENGTH_LONG).show();
                     }
                 }
             });
 
-        }
-        catch (Error e){
-            debugText = findViewById(R.id.DebugMyPkgsText);
+        } catch (Error e) {
+            debugText = (TextView) findViewById(R.id.DebugMyPkgsText);
             debugText.setText(e.getMessage());
         }
 
     }
 
     private void initViews() {
-        pkgsSpinner         = findViewById(R.id.pkgsSpinner);
-        pkgTrajectory       = findViewById(R.id.pkgsSpinner);
+        pkgsSpinner = (Spinner) findViewById(R.id.pkgsSpinner);
+        pkgTrajectory = (Spinner) findViewById(R.id.trajectorySpinner);
 
-        showPkgBt           = findViewById(R.id.showPkgBt);
-        addPkgBt              = findViewById(R.id.AddPkgBt);
+        showPkgBt = (Button) findViewById(R.id.showPkgBt);
+        addPkgBt = (Button) findViewById(R.id.AddPkgBt);
 
-        pkgSellerAddr       = findViewById(R.id.PKGSellerAddrText);
-        pkgCarrierAddr      = findViewById(R.id.PKGCarrierAddrText);
-        pkgBuyerAddr        = findViewById(R.id.PKGBuyerAddrText);
-        pkgDispResolvAddr   = findViewById(R.id.PKGDispResAddrText);
-        pkgSellerLeftToPay  = findViewById(R.id.PKGSellerLeftToPayText);
-        pkgBuyerLeftToPay   = findViewById(R.id.PKGBuyerLeftToPayText);
-        pkgCarrierLeftToPay = findViewById(R.id.PKGCarrierLeftToPayText);
-        pkgShippingFee      = findViewById(R.id.PKGShippingFeeText);
-        pkgMerchVal         = findViewById(R.id.PKGMerchValText);
-        pkgState            = findViewById(R.id.PKGStateText);
-        pkgNumber           = findViewById(R.id.MyPkgsAddrText);
-        debugText           = findViewById(R.id.DebugMyPkgsText);
+        pkgSellerAddr = (TextView) findViewById(R.id.PKGSellerAddrText);
+        pkgCarrierAddr = (TextView) findViewById(R.id.PKGCarrierAddrText);
+        pkgBuyerAddr = (TextView) findViewById(R.id.PKGBuyerAddrText);
+
+        pkgDispResolvAddr = (TextView) findViewById(R.id.PKGDispResAddrText);
+        pkgSellerLeftToPay = (TextView) findViewById(R.id.PKGSellerLeftToPayText);
+        pkgBuyerLeftToPay = (TextView) findViewById(R.id.PKGBuyerLeftToPayText);
+        pkgCarrierLeftToPay = (TextView) findViewById(R.id.PKGCarrierLeftToPayText);
+        pkgShippingFee = (TextView) findViewById(R.id.PKGShippingFeeText);
+        pkgMerchVal = (TextView) findViewById(R.id.PKGMerchValText);
+        pkgState = (TextView) findViewById(R.id.PKGStateText);
+        pkgNumber = (TextView) findViewById(R.id.MyPkgsAddrText);
+        debugText = (TextView) findViewById(R.id.DebugMyPkgsText);
 
 
     }
 
     private String getStateString(Integer state) {
         switch (state) {
-            case 0: return "Waiting for stakes in";
-            case 1: return "On the way to buyer";
-            case 2: return "on the way back to seller";
-            case 3: return "under dispute";
+            case 0:
+                return "Waiting for stakes in";
+            case 1:
+                return "On the way to buyer";
+            case 2:
+                return "on the way back to seller";
+            case 3:
+                return "under dispute";
         }
         return "";
     }
 
-    protected void fillSpinner(){
+    protected void fillSpinner() {
         SharedPreferences SharedPref = getSharedPreferences("pkgTrek", Context.MODE_PRIVATE);
 
         Set<String> pkgs = new HashSet<>();
-        pkgs = SharedPref.getStringSet(myAddr,pkgs);
+        pkgs = SharedPref.getStringSet(myAddr, pkgs);
 
 
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter(this,R.layout.support_simple_spinner_dropdown_item,pkgs.toArray());
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, pkgs.toArray());
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         pkgsSpinner.setAdapter(dataAdapter);
 
     }
-
-
 
 
 }

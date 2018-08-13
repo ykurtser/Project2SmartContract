@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <com.google.android.material.textfield.TextInputLayout
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -45,7 +45,7 @@
                     android:singleLine="true"
                     android:text="Delivery guy address" />
 
-            </com.google.android.material.textfield.TextInputLayout>
+            </android.support.design.widget.TextInputLayout>
 
 
             <Button

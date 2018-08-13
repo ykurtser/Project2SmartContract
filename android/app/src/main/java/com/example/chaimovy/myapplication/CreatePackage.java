@@ -42,65 +42,59 @@ public class CreatePackage extends Web3Activity {
 
         initViews();
 
-        createPackageBt.setOnClickListener(new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View view)
-                    {
+        createPackageBt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
-                        String buyerAddr                = buyerAddrTxt.getText().toString();
-                        String sellerAddr               = sellerAddrTxt.getText().toString();
-                        String dispResolvAddr           = dispResAddrTxt.getText().toString();
-                        String carrierAddr              = carrierAddrTxt.getText().toString();
-                        BigInteger shippingFee          = new BigInteger(shippigFeeTxt.getText().toString());
-                        BigInteger merchVal             = new BigInteger(merchValueTxt.getText().toString());
-                        BigInteger TO1Int               = new BigInteger(TO1Txt.getText().toString());
-                        BigInteger TO2Int               = new BigInteger(TO2Txt.getText().toString());
-                        BigInteger initialPaymentInt    = new BigInteger((initialPaymentTxt.getText().toString()));  //TODO check if relevant and add functionality
+                String buyerAddr = buyerAddrTxt.getText().toString();
+                String sellerAddr = sellerAddrTxt.getText().toString();
+                String dispResolvAddr = dispResAddrTxt.getText().toString();
+                String carrierAddr = carrierAddrTxt.getText().toString();
+                BigInteger shippingFee = new BigInteger(shippigFeeTxt.getText().toString());
+                BigInteger merchVal = new BigInteger(merchValueTxt.getText().toString());
+                BigInteger TO1Int = new BigInteger(TO1Txt.getText().toString());
+                BigInteger TO2Int = new BigInteger(TO2Txt.getText().toString());
+                BigInteger initialPaymentInt = new BigInteger((initialPaymentTxt.getText().toString()));  //TODO check if relevant and add functionality
 
-                        try
-                        {
-                            P2PackageManager pMan = P2PackageManager.load(getString(R.string.packageManagerAddrRopsten), web3, myCred, gasPrice, gasLimit);
+                try {
+                    P2PackageManager pMan = P2PackageManager.load(getString(R.string.packageManagerAddrRopsten), web3, myCred, gasPrice, gasLimit);
 
-                            TransactionReceipt txRecp = pMan.createPackage(sellerAddr,carrierAddr,buyerAddr,dispResolvAddr,merchVal,shippingFee,TO1Int,TO2Int).send();
+                    TransactionReceipt txRecp = pMan.createPackage(sellerAddr, carrierAddr, buyerAddr, dispResolvAddr, merchVal, shippingFee, TO1Int, TO2Int).send();
 
-                            String createdPkgAddr = pMan.getContractCreatedEvents(txRecp).get(0).addr;
+                    String createdPkgAddr = pMan.getContractCreatedEvents(txRecp).get(0).addr;
 
-                            //Adding pkg to shared properties
-                            SharedPreferences SharedPref = getSharedPreferences("pkgTrek", Context.MODE_PRIVATE);
-                            final SharedPreferences.Editor editor = SharedPref.edit();
-                            //get existing pkg addresses set, empty if empty
-                            Set<String> pkgSet = new HashSet<>();
-                            pkgSet = SharedPref.getStringSet(myAddr,pkgSet);
-                            //add new pkg addr
-                            pkgSet.add(createdPkgAddr);
-                            //write back
-                            editor.putStringSet(myAddr,pkgSet);
-                            editor.apply();
+                    //Adding pkg to shared properties
+                    SharedPreferences SharedPref = getSharedPreferences("pkgTrek", Context.MODE_PRIVATE);
+                    final SharedPreferences.Editor editor = SharedPref.edit();
+                    //get existing pkg addresses set, empty if empty
+                    Set<String> pkgSet = new HashSet<>();
+                    pkgSet = SharedPref.getStringSet(myAddr, pkgSet);
+                    //add new pkg addr
+                    pkgSet.add(createdPkgAddr);
+                    //write back
+                    editor.putStringSet(myAddr, pkgSet);
+                    editor.apply();
 
-                            SharedPreferences.Editor pkgInfoEditor = getSharedPreferences(createdPkgAddr, Context.MODE_PRIVATE).edit();
-                            pkgInfoEditor.putString("sellerAddr",sellerAddr);
-                            pkgInfoEditor.putString("carrierAddr",carrierAddr);
-                            pkgInfoEditor.putString("buyerAddr",buyerAddr);
-                            pkgInfoEditor.putString("dispResolvAddr",dispResolvAddr);
-                            pkgInfoEditor.putString("shippingFee",shippingFee.toString());
-                            pkgInfoEditor.putString("merchVal",merchVal.toString());
-                            pkgInfoEditor.apply();
+                    SharedPreferences.Editor pkgInfoEditor = getSharedPreferences(createdPkgAddr, Context.MODE_PRIVATE).edit();
+                    pkgInfoEditor.putString("sellerAddr", sellerAddr);
+                    pkgInfoEditor.putString("carrierAddr", carrierAddr);
+                    pkgInfoEditor.putString("buyerAddr", buyerAddr);
+                    pkgInfoEditor.putString("dispResolvAddr", dispResolvAddr);
+                    pkgInfoEditor.putString("shippingFee", shippingFee.toString());
+                    pkgInfoEditor.putString("merchVal", merchVal.toString());
+                    pkgInfoEditor.apply();
 
 
-                            createdAddr.setText(createdPkgAddr);
-                        }
-                        catch (Exception e){
-                            createdAddr.setText(e.toString());
-                        }
+                    createdAddr.setText(createdPkgAddr);
+                } catch (Exception e) {
+                    createdAddr.setText(e.toString());
+                }
 
 
+            }
+        });
 
-                    }
-                });
-
-        fillDefaultsBt.setOnClickListener(new View.OnClickListener()
-        {
+        fillDefaultsBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 buyerAddrTxt.setText("0x175A2e653C2bf106Ac1a061f26738A61ADC91C1d");
@@ -121,18 +115,18 @@ public class CreatePackage extends Web3Activity {
     private void initViews() {
         setContentView(R.layout.activity_create_package);
 
-        buyerAddrTxt      = findViewById(R.id.buyerAddrText);
-        sellerAddrTxt     = findViewById(R.id.SellerAddrText);
-        dispResAddrTxt    = findViewById(R.id.DisputeResolverAddrText);
-        carrierAddrTxt    = findViewById(R.id.CarrierAddrText);
-        shippigFeeTxt     = findViewById(R.id.ShippingFeeText);
-        merchValueTxt     = findViewById(R.id.merchValText);
-        TO1Txt            = findViewById(R.id.TO1Text);
-        TO2Txt            = findViewById(R.id.TO2Text);
-        initialPaymentTxt = findViewById(R.id.initialPaymentText);
-        createdAddr       = findViewById(R.id.CreatePkgAddrText);
+        buyerAddrTxt = (EditText) findViewById(R.id.buyerAddrText);
+        sellerAddrTxt = (EditText) findViewById(R.id.SellerAddrText);
+        dispResAddrTxt = (EditText) findViewById(R.id.DisputeResolverAddrText);
+        carrierAddrTxt = (EditText) findViewById(R.id.CarrierAddrText);
+        shippigFeeTxt = (EditText) findViewById(R.id.ShippingFeeText);
+        merchValueTxt = (EditText) findViewById(R.id.merchValText);
+        TO1Txt = (EditText) findViewById(R.id.TO1Text);
+        TO2Txt = (EditText) findViewById(R.id.TO2Text);
+        initialPaymentTxt = (EditText) findViewById(R.id.initialPaymentText);
+        createdAddr = (EditText) findViewById(R.id.CreatePkgAddrText);
 
-        createPackageBt   = findViewById(R.id.CreateNewPkgBt);
-        fillDefaultsBt    = findViewById(R.id.FillDefaultCreatePkg);
+        createPackageBt = (Button) findViewById(R.id.CreateNewPkgBt);
+        fillDefaultsBt = (Button) findViewById(R.id.FillDefaultCreatePkg);
     }
 }

@@ -11,8 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.support.v7.app.AppCompatActivity;
 
 public class LoginActivityBuyerSeller extends AppCompatActivity {
 
@@ -22,9 +21,9 @@ public class LoginActivityBuyerSeller extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_buyer_seller);
-        Button signInBt = findViewById(R.id.signInBt);
-        final TextView PublicAddText = findViewById(R.id.PublicAddText);
-        final TextView PrivateKeyText = findViewById(R.id.PrivateKeyText);
+        Button signInBt = (Button) findViewById(R.id.signInBt);
+        final TextView PublicAddText = (TextView) findViewById(R.id.PublicAddText);
+        final TextView PrivateKeyText = (TextView) findViewById(R.id.PrivateKeyText);
 
         SharedPreferences SharedPref = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
         final SharedPreferences.Editor editor = SharedPref.edit();

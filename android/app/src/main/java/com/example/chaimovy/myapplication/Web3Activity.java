@@ -14,8 +14,7 @@ import org.web3j.utils.Convert;
 
 import java.math.BigInteger;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.support.v7.app.AppCompatActivity;
 public class Web3Activity extends AppCompatActivity {
 
     String myAddr;
@@ -42,6 +41,23 @@ public class Web3Activity extends AppCompatActivity {
         gasPrice= Convert.toWei("0.00000001", Convert.Unit.ETHER).toBigInteger();
         gasLimit = new BigInteger("4999999");
         web3 = Web3jFactory.build(new HttpService(getResources().getString(R.string.web3HostRopsten)));
+        HttpClient httpClient = HttpClientBuilder.create().build(); //Use this instead
+
+        try {
+
+            HttpPost request = new HttpPost("http://yoururl");
+            StringEntity params =new StringEntity("details={\"name\":\"myname\",\"age\":\"20\"} ");
+            request.addHeader("content-type", "application/x-www-form-urlencoded");
+            request.setEntity(params);
+            HttpResponse response = httpClient.execute(request);
+
+            //handle response here...
+
+        }catch (Exception ex) {
+
+            //handle exception here
+
+        }
 
 
     }

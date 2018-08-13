@@ -22,7 +22,7 @@ import org.web3j.utils.Convert;
 
 import java.math.BigInteger;
 
-import androidx.appcompat.app.AppCompatActivity;
+import android.support.v7.app.AppCompatActivity;
 
 /**
  * A login screen that offers login via email/password.
@@ -36,14 +36,14 @@ public class LoginActivityDeliveryCompany extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_delivery_company);
 
-        Button signInBt                   = findViewById(R.id.carrierSignInBt);
-        Button createNewDeliveryCompanyBt = findViewById(R.id.createNewDeliveryCompanyBt);
-        Button FillLastUsedBt             = findViewById(R.id.FillLastUsedBt);
+        Button signInBt = (Button) findViewById(R.id.carrierSignInBt);
+        Button createNewDeliveryCompanyBt = (Button) findViewById(R.id.createNewDeliveryCompanyBt);
+        Button FillLastUsedBt = (Button) findViewById(R.id.FillLastUsedBt);
 
-        final TextView CarrierPublicAddrText = findViewById(R.id.CarrierPublicAddrText);
-        final TextView PrivateKeyText        = findViewById(R.id.CarrierKeyText);
-        final TextView CompanyAddrText       = findViewById(R.id.CompanyAddrText);
-        final TextView debugText             = findViewById(R.id.DebugDeliveryLoginText);
+        final TextView CarrierPublicAddrText = (TextView) findViewById(R.id.CarrierPublicAddrText);
+        final TextView PrivateKeyText = (TextView) findViewById(R.id.CarrierKeyText);
+        final TextView CompanyAddrText = (TextView) findViewById(R.id.CompanyAddrText);
+        final TextView debugText = (TextView) findViewById(R.id.DebugDeliveryLoginText);
 
         final SharedPreferences SharedPrefuserInfo = getApplicationContext().getSharedPreferences("userInfo", Context.MODE_PRIVATE);
         final SharedPreferences.Editor userInfoEditor = SharedPrefuserInfo.edit();
@@ -55,26 +55,24 @@ public class LoginActivityDeliveryCompany extends AppCompatActivity {
         final Web3j web3 = Web3jFactory.build(new HttpService(getResources().getString(R.string.web3HostRopsten)));
 
 
-
         //INTERNALS//
-
 
 
         ///BUTTON LISTENERS///
 
-        signInBt.setOnClickListener(new View.OnClickListener(){
+        signInBt.setOnClickListener(new View.OnClickListener() {
 
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 String userAddr = CarrierPublicAddrText.getText().toString();
                 String key = PrivateKeyText.getText().toString();
                 String companyAddr = CompanyAddrText.getText().toString();
 
                 //TODO maybe do here check that user address is approved carrier
 
-                userInfoEditor.putString("addr"          ,userAddr);
-                userInfoEditor.putString("key"           ,key);
-                userInfoEditor.putString("carrier"       ,companyAddr);
+                userInfoEditor.putString("addr", userAddr);
+                userInfoEditor.putString("key", key);
+                userInfoEditor.putString("carrier", companyAddr);
                 userInfoEditor.apply();
 
                 Intent I = new Intent(getApplicationContext(), CarrierActionMenu.class);
@@ -84,10 +82,10 @@ public class LoginActivityDeliveryCompany extends AppCompatActivity {
 
         });
 
-        createNewDeliveryCompanyBt.setOnClickListener(new View.OnClickListener(){
+        createNewDeliveryCompanyBt.setOnClickListener(new View.OnClickListener() {
 
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 try {
                     String UserAddr = CarrierPublicAddrText.getText().toString();
                     String key = PrivateKeyText.getText().toString();
@@ -110,11 +108,9 @@ public class LoginActivityDeliveryCompany extends AppCompatActivity {
                     //TODO: change to text and not Toast
                     debugText.setText("Company contract created\nPlease write your address");
 
-                }
-
-                catch (Exception e){
+                } catch (Exception e) {
                     debugText.setText("Error: \n" + e.toString());
-                    Toast.makeText(getBaseContext(),"Oops, something went wrong: \n" + e.toString(),Toast.LENGTH_LONG).show();
+                    Toast.makeText(getBaseContext(), "Oops, something went wrong: \n" + e.toString(), Toast.LENGTH_LONG).show();
                 }
 
 
@@ -127,19 +123,17 @@ public class LoginActivityDeliveryCompany extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                String lastAddr = SharedPrefuserInfo.getString("addr",getResources().getString(R.string.debugAddr));
-                String lastKey = SharedPrefuserInfo.getString("key",getResources().getString(R.string.debugKey));
-                String lastCarrier = SharedPrefuserInfo.getString("carrier",getResources().getString(R.string.debugCarrier));
+                String lastAddr = SharedPrefuserInfo.getString("addr", getResources().getString(R.string.debugAddr));
+                String lastKey = SharedPrefuserInfo.getString("key", getResources().getString(R.string.debugKey));
+                String lastCarrier = SharedPrefuserInfo.getString("carrier", getResources().getString(R.string.debugCarrier));
 
                 CarrierPublicAddrText.setText(lastAddr);
                 PrivateKeyText.setText(lastKey);
                 CompanyAddrText.setText(lastCarrier);
 
 
-
             }
         });
-
 
 
     }

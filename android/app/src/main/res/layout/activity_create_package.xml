@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <com.google.android.material.textfield.TextInputLayout
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -51,8 +51,8 @@
                     android:singleLine="true"
                     android:text=" Buyer Address" />
 
-            </com.google.android.material.textfield.TextInputLayout>
-            <com.google.android.material.textfield.TextInputLayout
+            </android.support.design.widget.TextInputLayout>
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -66,8 +66,8 @@
                     android:singleLine="true"
                     android:text="Seller Address" />
 
-            </com.google.android.material.textfield.TextInputLayout>
-            <com.google.android.material.textfield.TextInputLayout
+            </android.support.design.widget.TextInputLayout>
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -81,8 +81,8 @@
                     android:singleLine="true"
                     android:text="Carrier Address" />
 
-            </com.google.android.material.textfield.TextInputLayout>
-            <com.google.android.material.textfield.TextInputLayout
+            </android.support.design.widget.TextInputLayout>
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -96,8 +96,8 @@
                     android:singleLine="true"
                     android:text="Dispute resolver address" />
 
-            </com.google.android.material.textfield.TextInputLayout>
-            <com.google.android.material.textfield.TextInputLayout
+            </android.support.design.widget.TextInputLayout>
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -111,8 +111,8 @@
                     android:singleLine="true"
                     android:text="Shipping Fee" />
 
-            </com.google.android.material.textfield.TextInputLayout>
-            <com.google.android.material.textfield.TextInputLayout
+            </android.support.design.widget.TextInputLayout>
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -126,8 +126,8 @@
                     android:singleLine="true"
                     android:text="Merchendise Value" />
 
-            </com.google.android.material.textfield.TextInputLayout>
-            <com.google.android.material.textfield.TextInputLayout
+            </android.support.design.widget.TextInputLayout>
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -141,8 +141,8 @@
                     android:singleLine="true"
                     android:text="number of days to last payment" />
 
-            </com.google.android.material.textfield.TextInputLayout>
-            <com.google.android.material.textfield.TextInputLayout
+            </android.support.design.widget.TextInputLayout>
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -156,8 +156,8 @@
                     android:singleLine="true"
                     android:text="max number of dayes to arrival" />
 
-            </com.google.android.material.textfield.TextInputLayout>
-            <com.google.android.material.textfield.TextInputLayout
+            </android.support.design.widget.TextInputLayout>
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -171,7 +171,7 @@
                     android:singleLine="true"
                     android:text="initial value to send" />
 
-            </com.google.android.material.textfield.TextInputLayout>
+            </android.support.design.widget.TextInputLayout>
 
 
             <Button

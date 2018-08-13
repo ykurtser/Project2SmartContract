@@ -10,7 +10,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import androidx.appcompat.app.AppCompatActivity;
+import android.support.v7.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -19,47 +19,46 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button BuyerSellerBt = findViewById(R.id.buyerSellerBt);
-        Button DeliveryManagerBt = findViewById(R.id.deliveryManagerBt);
-        Button DeliveryGuyBt = findViewById(R.id.deliveryGuyBt);
+        Button BuyerSellerBt = (Button) findViewById(R.id.buyerSellerBt);
+        Button DeliveryManagerBt = (Button) findViewById(R.id.deliveryManagerBt);
+        Button DeliveryGuyBt = (Button) findViewById(R.id.deliveryGuyBt);
 
         SharedPreferences SharedPref = getApplicationContext().getSharedPreferences("userInfo", Context.MODE_PRIVATE);
         final SharedPreferences.Editor editor = SharedPref.edit();
 
-        BuyerSellerBt.setOnClickListener(new View.OnClickListener(){
+        BuyerSellerBt.setOnClickListener(new View.OnClickListener() {
 
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 Intent I = new Intent(getApplicationContext(), LoginActivityBuyerSeller.class);
-                editor.putString("WhoAmI","BuyerSeller");
+                editor.putString("WhoAmI", "BuyerSeller");
                 editor.apply();
                 startActivity(I);
             }
 
         });
-        DeliveryManagerBt.setOnClickListener(new View.OnClickListener(){
+        DeliveryManagerBt.setOnClickListener(new View.OnClickListener() {
 
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 Intent I = new Intent(getApplicationContext(), LoginActivityDeliveryCompany.class);
-                editor.putString("WhoAmI","DeliveryManager");
+                editor.putString("WhoAmI", "DeliveryManager");
                 editor.apply();
                 startActivity(I);
             }
 
         });
-        DeliveryGuyBt.setOnClickListener(new View.OnClickListener(){
+        DeliveryGuyBt.setOnClickListener(new View.OnClickListener() {
 
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 Intent I = new Intent(getApplicationContext(), LoginActivityDeliveryCompany.class);
-                editor.putString("WhoAmI","DeliveryGuy");
+                editor.putString("WhoAmI", "DeliveryGuy");
                 editor.apply();
                 startActivity(I);
             }
 
         });
-
 
 
     }

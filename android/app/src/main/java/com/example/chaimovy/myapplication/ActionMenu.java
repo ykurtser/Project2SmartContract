@@ -5,10 +5,11 @@ package com.example.chaimovy.myapplication;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
-import androidx.appcompat.app.AppCompatActivity;
+//import androidx.appcompat.app.AppCompatActivity;
 
 public class ActionMenu extends AppCompatActivity {
 
@@ -19,11 +20,11 @@ public class ActionMenu extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_action_menu);
-        Button createPkgBt = findViewById(R.id.createPkgBt);
-        Button myPkgsBt = findViewById(R.id.myPkgsBt);
-        Button signPkgBt = findViewById(R.id.signPkgBt);
-        Button openDispBt = findViewById(R.id.openDispBt);
-        Button returnPkgBt = findViewById(R.id.returnPkgBt);
+        Button createPkgBt = (Button) findViewById(R.id.createPkgBt);
+        Button myPkgsBt = (Button) findViewById(R.id.myPkgsBt);
+        Button signPkgBt =(Button) findViewById(R.id.signPkgBt);
+        Button openDispBt = (Button)findViewById(R.id.openDispBt);
+        Button returnPkgBt = (Button)findViewById(R.id.returnPkgBt);
         if (getIntent().hasExtra("address") &&getIntent().hasExtra("key"))
         {
             address=getIntent().getExtras().getString("address");
