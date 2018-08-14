@@ -12,11 +12,31 @@
         android:layout_width="match_parent"
         android:layout_height="45dp" />
 
-    <Button
-        android:id="@+id/showPkgBt"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Show Package details" />
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/showPkgBt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Show details" />
+
+        <Button
+            android:id="@+id/myPkgsCopyClpbrd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="copy addr" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/myPkgsSendFundsBt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Send funds" />
 
     <Spinner
         android:id="@+id/trajectorySpinner"
@@ -26,22 +46,22 @@
     <TextView
         android:id="@+id/PKGBuyerAddrText"
         android:layout_width="381dp"
-        android:layout_height="24dp" />
+        android:layout_height="34dp" />
 
     <TextView
         android:id="@+id/PKGSellerAddrText"
         android:layout_width="381dp"
-        android:layout_height="24dp" />
+        android:layout_height="34dp" />
 
     <TextView
         android:id="@+id/PKGCarrierAddrText"
         android:layout_width="381dp"
-        android:layout_height="24dp" />
+        android:layout_height="34dp" />
 
     <TextView
         android:id="@+id/PKGDispResAddrText"
         android:layout_width="381dp"
-        android:layout_height="24dp" />
+        android:layout_height="34dp" />
 
     <TextView
         android:id="@+id/PKGBuyerLeftToPayText"
@@ -88,10 +108,9 @@
         android:id="@+id/MyPkgsAddrText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/prompt_email"
+        android:hint="Package address"
         android:inputType="textEmailAddress"
         android:maxLines="1"
-        android:singleLine="true"
-        android:text="pkg addr" />
+        android:singleLine="true" />
 
 </LinearLayout>

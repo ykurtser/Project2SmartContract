@@ -20,13 +20,13 @@ android {
     configurations.all { resolutionStrategy.force 'com.android.support:support-v4:25.1.0' }
 }
 
-configurations.all {exclude group: 'android.support.v4.app', module: 'INotificationSideChannel'}
+configurations.all { exclude group: 'android.support.v4.app', module: 'INotificationSideChannel' }
 
 
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-   // implementation 'androidx.appcompat:appcompat:1.0.0-alpha1'
+    // implementation 'androidx.appcompat:appcompat:1.0.0-alpha1'
     implementation 'com.android.support:multidex:1.0.3'
     implementation 'org.web3j:core:3.3.1-android'
 //    implementation 'com.google.android.material:material:1.0.0-alpha1'

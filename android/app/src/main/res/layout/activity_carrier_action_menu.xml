@@ -21,6 +21,7 @@
         android:id="@+id/CarrierMyPkgsBt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="44dp"
         android:text="My Packages"
         app:layout_constraintBottom_toTopOf="@+id/CarrierSignPkgBt"
         app:layout_constraintEnd_toEndOf="parent"
@@ -30,26 +31,32 @@
         android:id="@+id/CarrierSignPkgBt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="60dp"
         android:text="sign package"
         app:layout_constraintBottom_toTopOf="@+id/CarrierOpenDisputeBt"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/CarrierOpenDisputeBt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="68dp"
         android:text="Open dispute"
         app:layout_constraintBottom_toTopOf="@+id/addDeliveryGuyBt"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/addDeliveryGuyBt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="116dp"
         android:text="add new delivery guy"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent" />
 </android.support.constraint.ConstraintLayout>

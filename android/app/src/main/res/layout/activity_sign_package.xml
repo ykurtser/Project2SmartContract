@@ -9,7 +9,7 @@
 
 
     <TextView
-        android:id="@+id/SignPkgDebugText"
+        android:id="@+id/signPkgDebugText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -39,20 +39,39 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <AutoCompleteTextView
-            android:id="@+id/SignPkgAddrText"
+            android:id="@+id/signPkgAddrText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/prompt_email"
+            android:hint="Package address"
             android:inputType="textEmailAddress"
             android:maxLines="1"
-            android:singleLine="true"
-            />
+            android:singleLine="true" />
             <!--android:text="pkg addr" />-->
 
     </android.support.design.widget.TextInputLayout>
 
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/textInputLayout7"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/signPackageLocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Location" />
+    </android.support.design.widget.TextInputLayout>
+
     <Button
-        android:id="@+id/ScanQRCode"
+        android:id="@+id/signPkgScanQRCode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -63,12 +82,12 @@
         android:layout_marginTop="8dp"
         android:text="Scan QR Code"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/SignPkgBt"
+        app:layout_constraintEnd_toStartOf="@+id/signPkgBt"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout7" />
 
     <Button
-        android:id="@+id/SignPkgBt"
+        android:id="@+id/signPkgBt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -78,6 +97,6 @@
         android:text="Sign Package"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout7" />
 
 </android.support.constraint.ConstraintLayout>

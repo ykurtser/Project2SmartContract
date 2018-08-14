@@ -1,0 +1,12 @@
+-Add sending funds to a package option - specially for a contract manager - critical!
+-add signing and returning functions
+-show trajectory
+-add dispute resolver menu
+-add copy address from my packages spinner
+-handle waiting when async calls happen
+-UI design
+-Presentation use case thorough test
+-Finish writing the book
+-Finish Presentation
+-Set dynamic block gas limit
+-Add DeliveryStations

@@ -26,7 +26,6 @@ public class CreatePackage extends Web3Activity {
     EditText merchValueTxt;
     EditText TO1Txt;
     EditText TO2Txt;
-    EditText initialPaymentTxt;
     EditText createdAddr;
 
     EditText AddrKey;
@@ -54,7 +53,6 @@ public class CreatePackage extends Web3Activity {
                 BigInteger merchVal = new BigInteger(merchValueTxt.getText().toString());
                 BigInteger TO1Int = new BigInteger(TO1Txt.getText().toString());
                 BigInteger TO2Int = new BigInteger(TO2Txt.getText().toString());
-                BigInteger initialPaymentInt = new BigInteger((initialPaymentTxt.getText().toString()));  //TODO check if relevant and add functionality
 
                 try {
                     P2PackageManager pMan = P2PackageManager.load(getString(R.string.packageManagerAddrRopsten), web3, myCred, gasPrice, gasLimit);
@@ -105,7 +103,6 @@ public class CreatePackage extends Web3Activity {
                 merchValueTxt.setText("150000000000000000");
                 TO1Txt.setText("2");
                 TO2Txt.setText("3");
-                initialPaymentTxt.setText("0");
             }
         });
 
@@ -123,7 +120,6 @@ public class CreatePackage extends Web3Activity {
         merchValueTxt = (EditText) findViewById(R.id.merchValText);
         TO1Txt = (EditText) findViewById(R.id.TO1Text);
         TO2Txt = (EditText) findViewById(R.id.TO2Text);
-        initialPaymentTxt = (EditText) findViewById(R.id.initialPaymentText);
         createdAddr = (EditText) findViewById(R.id.CreatePkgAddrText);
 
         createPackageBt = (Button) findViewById(R.id.CreateNewPkgBt);

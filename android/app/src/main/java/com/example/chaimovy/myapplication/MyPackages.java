@@ -3,7 +3,10 @@
 
 package com.example.chaimovy.myapplication;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -24,21 +27,11 @@ public class MyPackages extends Web3Activity {
     Spinner pkgsSpinner;
     Spinner pkgTrajectory;
 
-    Button showPkgBt;
-    Button addPkgBt;
+    Button showPkgBt, addPkgBt, sendFundsBt, copyToClpbrdBt;
 
-    TextView pkgSellerAddr;
-    TextView pkgCarrierAddr;
-    TextView pkgBuyerAddr;
-    TextView pkgDispResolvAddr;
-    TextView pkgSellerLeftToPay;
-    TextView pkgBuyerLeftToPay;
-    TextView pkgCarrierLeftToPay;
-    TextView pkgShippingFee;
-    TextView pkgMerchVal;
-    TextView pkgState;
-    TextView debugText;
-    TextView pkgNumber;
+    TextView pkgSellerAddr, pkgCarrierAddr, pkgBuyerAddr, pkgDispResolvAddr, pkgSellerLeftToPay,
+            pkgBuyerLeftToPay, pkgCarrierLeftToPay, pkgShippingFee, pkgMerchVal, pkgState,
+            debugText, pkgNumber;
 
     P2PackageManager pMan;
 
@@ -53,6 +46,27 @@ public class MyPackages extends Web3Activity {
             pMan = P2PackageManager.load(getString(R.string.packageManagerAddrRopsten), web3, myCred, gasPrice, gasLimit);
 
             fillSpinner();
+
+            sendFundsBt.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent I = new Intent(getApplicationContext(), SendFunds.class);
+                    I.putExtra("addr",pkgsSpinner.getSelectedItem().toString());
+                    startActivity(I);
+                }
+            });
+
+            copyToClpbrdBt.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String addrCopy = pkgsSpinner.getSelectedItem().toString();
+                    ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                    ClipData clip = ClipData.newPlainText(addrCopy, addrCopy);
+                    clipboard.setPrimaryClip(clip);
+                    Toast.makeText(getBaseContext(), "Address copied to clipboard", Toast.LENGTH_SHORT).show();
+
+                }
+            });
 
             showPkgBt.setOnClickListener(new View.OnClickListener()
 
@@ -84,7 +98,7 @@ public class MyPackages extends Web3Activity {
                         String SellerLeftToPayWei = pkg.getSellerStake().send().subtract(pkg.getAmmountSeller().send()).toString();
                         String BuyerLeftToPayWei = pkg.getBuyerStake().send().subtract(pkg.getAmmountBuyer().send()).toString();
                         String CarrierLeftToPayWei = pkg.getCarrierStake().send().subtract(pkg.getAmmountCarrier().send()).toString();
-                        String State = getStateString(Integer.parseInt(pkg.getState().send().toString()));
+                        String State = P2Package.getStateString(pkg.getState().send().intValue());
 
                         String SellerLeftToPayEther = Convert.fromWei(SellerLeftToPayWei, Convert.Unit.ETHER).toString();
                         String BuyerLeftToPayEther = Convert.fromWei(BuyerLeftToPayWei, Convert.Unit.ETHER).toString();
@@ -163,6 +177,8 @@ public class MyPackages extends Web3Activity {
 
         showPkgBt = (Button) findViewById(R.id.showPkgBt);
         addPkgBt = (Button) findViewById(R.id.AddPkgBt);
+        sendFundsBt = (Button) findViewById(R.id.myPkgsSendFundsBt);
+        copyToClpbrdBt = (Button) findViewById(R.id.myPkgsCopyClpbrd);
 
         pkgSellerAddr = (TextView) findViewById(R.id.PKGSellerAddrText);
         pkgCarrierAddr = (TextView) findViewById(R.id.PKGCarrierAddrText);
@@ -181,19 +197,6 @@ public class MyPackages extends Web3Activity {
 
     }
 
-    private String getStateString(Integer state) {
-        switch (state) {
-            case 0:
-                return "Waiting for stakes in";
-            case 1:
-                return "On the way to buyer";
-            case 2:
-                return "on the way back to seller";
-            case 3:
-                return "under dispute";
-        }
-        return "";
-    }
 
     protected void fillSpinner() {
         SharedPreferences SharedPref = getSharedPreferences("pkgTrek", Context.MODE_PRIVATE);

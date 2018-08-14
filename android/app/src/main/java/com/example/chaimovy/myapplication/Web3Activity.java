@@ -19,6 +19,7 @@ public class Web3Activity extends AppCompatActivity {
 
     String myAddr;
     String myKey;
+    String carrierAddr;
     org.web3j.crypto.Credentials myCred;
     Web3j web3;
     BigInteger gasPrice;
@@ -36,28 +37,12 @@ public class Web3Activity extends AppCompatActivity {
         SharedPreferences SharedPref = getApplicationContext().getSharedPreferences("userInfo", Context.MODE_PRIVATE);
         myKey=SharedPref.getString("key","");
         myAddr=SharedPref.getString("addr","");
+        carrierAddr=SharedPref.getString("carrier","");
 
         myCred= Credentials.create(myKey);
         gasPrice= Convert.toWei("0.00000001", Convert.Unit.ETHER).toBigInteger();
         gasLimit = new BigInteger("4999999");
         web3 = Web3jFactory.build(new HttpService(getResources().getString(R.string.web3HostRopsten)));
-        HttpClient httpClient = HttpClientBuilder.create().build(); //Use this instead
-
-        try {
-
-            HttpPost request = new HttpPost("http://yoururl");
-            StringEntity params =new StringEntity("details={\"name\":\"myname\",\"age\":\"20\"} ");
-            request.addHeader("content-type", "application/x-www-form-urlencoded");
-            request.setEntity(params);
-            HttpResponse response = httpClient.execute(request);
-
-            //handle response here...
-
-        }catch (Exception ex) {
-
-            //handle exception here
-
-        }
 
 
     }

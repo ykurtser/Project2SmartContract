@@ -116,6 +116,20 @@ public class P2Package extends Contract {
         return executeRemoteCallSingleValueReturn(function, BigInteger.class);
     }
 
+    public static String getStateString(Integer state) {
+        switch (state) {
+            case 0:
+                return "Waiting for stakes in";
+            case 1:
+                return "On the way to buyer";
+            case 2:
+                return "on the way back to seller";
+            case 3:
+                return "under dispute";
+        }
+        return "";
+    }
+
     public RemoteCall<String> getCarrier() {
         final Function function = new Function(FUNC_GETCARRIER, 
                 Arrays.<Type>asList(), 
