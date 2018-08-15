@@ -9,10 +9,13 @@ import android.os.StrictMode;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.Web3jFactory;
+import org.web3j.protocol.core.DefaultBlockParameterName;
+import org.web3j.protocol.core.methods.response.EthBlock;
 import org.web3j.protocol.http.HttpService;
 import org.web3j.utils.Convert;
 
 import java.math.BigInteger;
+import java.util.List;
 
 import android.support.v7.app.AppCompatActivity;
 public class Web3Activity extends AppCompatActivity {
@@ -27,23 +30,32 @@ public class Web3Activity extends AppCompatActivity {
 
 
 
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         //Policy change to allow async calls
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
+        try {
+            SharedPreferences SharedPref = getApplicationContext().getSharedPreferences("userInfo", Context.MODE_PRIVATE);
+            myKey = SharedPref.getString("key", "");
+            myAddr = SharedPref.getString("addr", "");
+            carrierAddr = SharedPref.getString("carrier", "");
 
-        SharedPreferences SharedPref = getApplicationContext().getSharedPreferences("userInfo", Context.MODE_PRIVATE);
-        myKey=SharedPref.getString("key","");
-        myAddr=SharedPref.getString("addr","");
-        carrierAddr=SharedPref.getString("carrier","");
+            myCred = Credentials.create(myKey);
+            gasPrice = Convert.toWei("0.00000001", Convert.Unit.ETHER).toBigInteger();
+            gasLimit = new BigInteger("4999999");
+            web3 = Web3jFactory.build(new HttpService(getResources().getString(R.string.web3HostRopsten)));
+            //EthBlock lastBlock = web3.ethGetBlockByNumber(DefaultBlockParameterName.LATEST, false).send();
+            //List<EthBlock.TransactionResult> tranList = lastBlock.getBlock().getTransactions();
+            //EthBlock.TransactionResult tran = tranList.get(0);
 
-        myCred= Credentials.create(myKey);
-        gasPrice= Convert.toWei("0.00000001", Convert.Unit.ETHER).toBigInteger();
-        gasLimit = new BigInteger("4999999");
-        web3 = Web3jFactory.build(new HttpService(getResources().getString(R.string.web3HostRopsten)));
 
+        }
+        catch (Exception e){
+
+        }
 
     }
 }
