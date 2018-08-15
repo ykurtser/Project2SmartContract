@@ -52,8 +52,8 @@ public class LoginActivityBuyerSeller extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                String lastAddr = SharedPrefuserInfo.getString("addr", getResources().getString(R.string.debugAddr));
-                String lastKey = SharedPrefuserInfo.getString("key", getResources().getString(R.string.debugKey));
+                String lastAddr = SharedPrefuserInfo.getString("addr75578", getResources().getString(R.string.debugAddr));
+                String lastKey = SharedPrefuserInfo.getString("key798698", getResources().getString(R.string.debugKey));
 
                 PublicAddText.setText(lastAddr);
                 PrivateKeyText.setText(lastKey);
@@ -63,7 +63,7 @@ public class LoginActivityBuyerSeller extends AppCompatActivity {
     }
 
     private void initViews() {
-        signInBt = (Button) findViewById(R.id.loginBuySellsignInBt);
+        signInBt = (Button) findViewById(R.id.loginBuySellSignInBt);
         lastUsedBt = (Button) findViewById(R.id.loginBuySellLastUsedBt);
         PublicAddText = (TextView) findViewById(R.id.loginBuySellPublicAddrText);
         PrivateKeyText = (TextView) findViewById(R.id.loginBuySellPrivateKeyText);

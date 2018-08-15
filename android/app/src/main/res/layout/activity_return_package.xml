@@ -47,7 +47,7 @@
 
     </android.support.design.widget.TextInputLayout>
 
-    <Button
+    <Button style="@style/Button"
         android:id="@+id/retPkgScanQRCode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -63,7 +63,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textInputLayout8" />
 
-    <Button
+    <Button style="@style/Button"
         android:id="@+id/retPkgBt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

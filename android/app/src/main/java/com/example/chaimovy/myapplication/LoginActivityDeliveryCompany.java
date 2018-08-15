@@ -6,6 +6,7 @@ package com.example.chaimovy.myapplication;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -21,6 +22,7 @@ import org.web3j.protocol.http.HttpService;
 import org.web3j.utils.Convert;
 
 import java.math.BigInteger;
+import java.util.concurrent.ExecutionException;
 
 import android.support.v7.app.AppCompatActivity;
 
@@ -29,6 +31,11 @@ import android.support.v7.app.AppCompatActivity;
  */
 public class LoginActivityDeliveryCompany extends AppCompatActivity {
 
+
+    private TextView privateKeyText;
+    private TextView debugText;
+    private TextView companyAddrText;
+    private Web3j web3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,9 +48,9 @@ public class LoginActivityDeliveryCompany extends AppCompatActivity {
         Button FillLastUsedBt = (Button) findViewById(R.id.FillLastUsedBt);
 
         final TextView CarrierPublicAddrText = (TextView) findViewById(R.id.CarrierPublicAddrText);
-        final TextView PrivateKeyText = (TextView) findViewById(R.id.CarrierKeyText);
-        final TextView CompanyAddrText = (TextView) findViewById(R.id.CompanyAddrText);
-        final TextView debugText = (TextView) findViewById(R.id.DebugDeliveryLoginText);
+        privateKeyText = (TextView) findViewById(R.id.CarrierKeyText);
+        companyAddrText = (TextView) findViewById(R.id.CompanyAddrText);
+        debugText = (TextView) findViewById(R.id.DebugDeliveryLoginText);
 
         final SharedPreferences SharedPrefuserInfo = getApplicationContext().getSharedPreferences("userInfo", Context.MODE_PRIVATE);
         final SharedPreferences.Editor userInfoEditor = SharedPrefuserInfo.edit();
@@ -52,7 +59,7 @@ public class LoginActivityDeliveryCompany extends AppCompatActivity {
 //        userInfoEditor.apply();
 //        debugText.setText("shared pref test:" + SharedPrefuserInfo.getString("debug","failure"));
 
-        final Web3j web3 = Web3jFactory.build(new HttpService(getResources().getString(R.string.web3HostRopsten)));
+        web3 = Web3jFactory.build(new HttpService(getResources().getString(R.string.web3HostRopsten)));
 
 
         //INTERNALS//
@@ -65,8 +72,8 @@ public class LoginActivityDeliveryCompany extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String userAddr = CarrierPublicAddrText.getText().toString();
-                String key = PrivateKeyText.getText().toString();
-                String companyAddr = CompanyAddrText.getText().toString();
+                String key = privateKeyText.getText().toString();
+                String companyAddr = companyAddrText.getText().toString();
 
                 //TODO maybe do here check that user address is approved carrier
 
@@ -86,34 +93,7 @@ public class LoginActivityDeliveryCompany extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                try {
-                    String UserAddr = CarrierPublicAddrText.getText().toString();
-                    String key = PrivateKeyText.getText().toString();
-
-                    //TODO: change to text and not Toast
-                    debugText.setText("Trying to Create a new company contract, this can take a minute, please wait...");
-
-                    Credentials myCred = Credentials.create(key);
-
-                    BigInteger gasPrice = Convert.toWei("0.00000001", Convert.Unit.ETHER).toBigInteger();
-                    BigInteger gasLimit = new BigInteger("1149216");
-
-                    P2PackageManager pMan = P2PackageManager.load(getString(R.string.packageManagerAddrRopsten), web3, myCred, gasPrice, gasLimit);
-
-                    TransactionReceipt txRecp = pMan.createCarrier().sendAsync().get();
-
-                    //putting created address on Company's addr text field
-                    CompanyAddrText.setText(pMan.getContractCreatedEvents(txRecp).get(0).addr);
-
-                    //TODO: change to text and not Toast
-                    debugText.setText("Company contract created\nPlease write your address");
-
-                } catch (Exception e) {
-                    debugText.setText("Error: \n" + e.toString());
-                    Toast.makeText(getBaseContext(), "Oops, something went wrong: \n" + e.toString(), Toast.LENGTH_LONG).show();
-                }
-
-
+                new CreateNewDeliveryCompanyTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
 
 
@@ -128,14 +108,60 @@ public class LoginActivityDeliveryCompany extends AppCompatActivity {
                 String lastCarrier = SharedPrefuserInfo.getString("carrier", getResources().getString(R.string.debugCarrier));
 
                 CarrierPublicAddrText.setText(lastAddr);
-                PrivateKeyText.setText(lastKey);
-                CompanyAddrText.setText(lastCarrier);
+                privateKeyText.setText(lastKey);
+                companyAddrText.setText(lastCarrier);
 
 
             }
         });
 
 
+    }
+
+
+    class CreateNewDeliveryCompanyTask extends AsyncTask<Void, Void, TransactionReceipt> {
+
+        private String key;
+        Exception exc;
+        private P2PackageManager pMan;
+        private View loadingLayout;
+
+        @Override
+        protected void onPreExecute() {
+            loadingLayout = findViewById(R.id.loadingLayout);
+            loadingLayout.setVisibility(View.VISIBLE);
+            key = privateKeyText.getText().toString();
+            debugText.setText("Trying to Create a new company contract, this can take a minute, please wait...");
+        }
+
+        @Override
+        protected TransactionReceipt doInBackground(Void... voids) {
+            try {
+                Credentials myCred = Credentials.create(key);
+
+                BigInteger gasPrice = Convert.toWei("0.00000001", Convert.Unit.ETHER).toBigInteger();
+                BigInteger gasLimit = new BigInteger("1149216");
+
+                pMan = P2PackageManager.load(getString(R.string.packageManagerAddrRopsten), web3, myCred, gasPrice, gasLimit);
+                return pMan.createCarrier().sendAsync().get();
+
+            } catch (Exception e) {
+                exc = e;
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(TransactionReceipt transactionReceipt) {
+            loadingLayout.setVisibility(View.GONE);
+            if (transactionReceipt == null) {
+                debugText.setText("Error: \n" + exc.getMessage());
+                Toast.makeText(getBaseContext(), "Oops, something went wrong: \n" + exc.getMessage(), Toast.LENGTH_LONG).show();
+            } else {
+                companyAddrText.setText(pMan.getContractCreatedEvents(transactionReceipt).get(0).addr);
+                debugText.setText("Company contract created\nPlease write your address");
+            }
+        }
     }
 
 }

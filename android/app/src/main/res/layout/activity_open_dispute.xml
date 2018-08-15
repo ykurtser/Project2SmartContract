@@ -44,7 +44,7 @@
 
     </android.support.design.widget.TextInputLayout>
 
-    <Button
+    <Button style="@style/Button"
         android:id="@+id/openDispBt"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
@@ -57,7 +57,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
 
-    <Button
+    <Button style="@style/Button"
         android:id="@+id/openDispQrBt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

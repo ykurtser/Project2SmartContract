@@ -19,14 +19,16 @@
 
         <Button
             android:id="@+id/showPkgBt"
-            android:layout_width="wrap_content"
+            style="@style/Button"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Show details" />
 
         <Button
             android:id="@+id/myPkgsCopyClpbrd"
-            android:layout_width="wrap_content"
+            style="@style/Button"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="copy addr" />
@@ -34,75 +36,84 @@
 
     <Button
         android:id="@+id/myPkgsSendFundsBt"
+        style="@style/Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Send funds" />
 
-    <Spinner
-        android:id="@+id/trajectorySpinner"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="#2000">
 
-    <TextView
-        android:id="@+id/PKGBuyerAddrText"
-        android:layout_width="381dp"
-        android:layout_height="34dp" />
+        <Spinner
+            android:id="@+id/trajectorySpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-    <TextView
-        android:id="@+id/PKGSellerAddrText"
-        android:layout_width="381dp"
-        android:layout_height="34dp" />
+        <TextView
+            android:id="@+id/PKGBuyerAddrText"
+            android:layout_width="381dp"
+            android:layout_height="34dp" />
 
-    <TextView
-        android:id="@+id/PKGCarrierAddrText"
-        android:layout_width="381dp"
-        android:layout_height="34dp" />
+        <TextView
+            android:id="@+id/PKGSellerAddrText"
+            android:layout_width="381dp"
+            android:layout_height="34dp" />
 
-    <TextView
-        android:id="@+id/PKGDispResAddrText"
-        android:layout_width="381dp"
-        android:layout_height="34dp" />
+        <TextView
+            android:id="@+id/PKGCarrierAddrText"
+            android:layout_width="381dp"
+            android:layout_height="34dp" />
 
-    <TextView
-        android:id="@+id/PKGBuyerLeftToPayText"
-        android:layout_width="381dp"
-        android:layout_height="24dp" />
+        <TextView
+            android:id="@+id/PKGDispResAddrText"
+            android:layout_width="381dp"
+            android:layout_height="34dp" />
 
-    <TextView
-        android:id="@+id/PKGSellerLeftToPayText"
-        android:layout_width="match_parent"
-        android:layout_height="24dp" />
+        <TextView
+            android:id="@+id/PKGBuyerLeftToPayText"
+            android:layout_width="381dp"
+            android:layout_height="24dp" />
 
-    <TextView
-        android:id="@+id/PKGCarrierLeftToPayText"
-        android:layout_width="match_parent"
-        android:layout_height="24dp" />
+        <TextView
+            android:id="@+id/PKGSellerLeftToPayText"
+            android:layout_width="match_parent"
+            android:layout_height="24dp" />
 
-    <TextView
-        android:id="@+id/PKGShippingFeeText"
-        android:layout_width="381dp"
-        android:layout_height="24dp" />
+        <TextView
+            android:id="@+id/PKGCarrierLeftToPayText"
+            android:layout_width="match_parent"
+            android:layout_height="24dp" />
 
-    <TextView
-        android:id="@+id/PKGMerchValText"
-        android:layout_width="381dp"
-        android:layout_height="24dp" />
+        <TextView
+            android:id="@+id/PKGShippingFeeText"
+            android:layout_width="381dp"
+            android:layout_height="24dp" />
 
-    <TextView
-        android:id="@+id/PKGStateText"
-        android:layout_width="381dp"
-        android:layout_height="24dp" />
+        <TextView
+            android:id="@+id/PKGMerchValText"
+            android:layout_width="381dp"
+            android:layout_height="24dp" />
 
-    <TextView
-        android:id="@+id/DebugMyPkgsText"
-        android:layout_width="match_parent"
-        android:layout_height="24dp" />
+        <TextView
+            android:id="@+id/PKGStateText"
+            android:layout_width="381dp"
+            android:layout_height="24dp" />
+
+        <TextView
+            android:id="@+id/DebugMyPkgsText"
+            android:layout_width="match_parent"
+            android:layout_height="24dp" />
+    </LinearLayout>
 
     <Button
         android:id="@+id/AddPkgBt"
+        style="@style/Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Add pkg" />
+        android:text="Add package" />
 
     <AutoCompleteTextView
         android:id="@+id/MyPkgsAddrText"

@@ -8,55 +8,91 @@
     tools:context=".CarrierActionMenu">
 
     <Button
-        android:id="@+id/carrierCreatePkgBt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Create Package"
-        app:layout_constraintBottom_toTopOf="@+id/CarrierMyPkgsBt"
+        android:id="@+id/CarrierMyPkgsBt"
+        style="@style/Button"
+        android:layout_width="395dp"
+        android:layout_height="44dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="60dp"
+        android:text="My Packages"
+        app:layout_constraintBottom_toTopOf="@+id/carrierCreatePkgBt"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 
     <Button
-        android:id="@+id/CarrierMyPkgsBt"
-        android:layout_width="wrap_content"
+        android:id="@+id/carrierCreatePkgBt"
+        style="@style/Button"
+        android:layout_width="395dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="44dp"
-        android:text="My Packages"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Create Package"
         app:layout_constraintBottom_toTopOf="@+id/CarrierSignPkgBt"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/CarrierMyPkgsBt" />
 
     <Button
         android:id="@+id/CarrierSignPkgBt"
-        android:layout_width="wrap_content"
+        style="@style/Button"
+        android:layout_width="395dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="60dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
         android:text="sign package"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
         app:layout_constraintBottom_toTopOf="@+id/CarrierOpenDisputeBt"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.501"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/carrierCreatePkgBt" />
 
     <Button
         android:id="@+id/CarrierOpenDisputeBt"
-        android:layout_width="wrap_content"
+        style="@style/Button"
+        android:layout_width="395dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="68dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
         android:text="Open dispute"
         app:layout_constraintBottom_toTopOf="@+id/addDeliveryGuyBt"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.501"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/CarrierSignPkgBt" />
 
     <Button
         android:id="@+id/addDeliveryGuyBt"
-        android:layout_width="wrap_content"
+        style="@style/Button"
+        android:layout_width="395dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="116dp"
+        android:layout_marginBottom="60dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:text="add new delivery guy"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/CarrierOpenDisputeBt" />
 </android.support.constraint.ConstraintLayout>

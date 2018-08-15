@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/loadingLayout"
+    android:background="#CFFF"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:visibility="gone"
+    android:clickable="true"
+    android:focusable="true">
+    <!--tools:showIn="@layout/activity_login_delivery_company"-->
+    <!--android:paddingBottom="100dp"-->
+
+    <ProgressBar
+        android:layout_width="60dp"
+        android:layout_height="60dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/connecting_to_the_block_chain_please_wait"
+        android:gravity="center"
+        android:background="@color/colorAccent"
+        android:padding="8dp"
+        style="@style/TextAppearance.AppCompat.Medium" />
+
+</LinearLayout>

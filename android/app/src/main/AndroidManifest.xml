@@ -23,7 +23,10 @@
         android:theme="@style/AppTheme">
 
         <!-- android:usesCleartextTraffic="true" -->
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".MainActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -32,24 +35,67 @@
         </activity>
         <activity
             android:name=".LoginActivityBuyerSeller"
-            android:label="@string/title_activity_login_buyer_seller" />
+            android:configChanges="orientation|keyboardHidden"
+            android:label="@string/title_activity_login_buyer_seller"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".LoginActivityDeliveryCompany"
-            android:label="@string/title_activity_login_delivery_company" />
-        <activity android:name=".ActionMenu" />
-        <activity android:name=".CarrierActionMenu" />
-        <activity android:name=".SignPackage" />
-        <activity android:name=".AddDeliveryGuy" />
-        <activity android:name=".MyPackages" />
-        <activity android:name=".OpenDispute" />
-        <activity android:name=".CreatePackage" />
-        <activity android:name=".ReturnPackage" />
+            android:configChanges="orientation|keyboardHidden"
+            android:label="@string/title_activity_login_delivery_company"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ActionMenu"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".CarrierActionMenu"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".SignPackage"
+            android:configChanges="orientation|keyboardHidden"
+            android:label="Sign Package"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".AddDeliveryGuy"
+            android:configChanges="orientation|keyboardHidden"
+            android:label="Add Carrier"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".MyPackages"
+            android:configChanges="orientation|keyboardHidden"
+            android:label="My Packages"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".OpenDispute"
+            android:configChanges="orientation|keyboardHidden"
+            android:label="Open Dispute"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".CreatePackage"
+            android:configChanges="orientation|keyboardHidden"
+            android:label="Create Package"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".ReturnPackage"
+            android:configChanges="orientation|keyboardHidden"
+            android:label="Return Package"
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.journeyapps.barcodescanner.CaptureActivity"
             android:screenOrientation="fullSensor"
-            tools:replace="screenOrientation" />
-        <activity android:name=".SendFunds" />
-        <activity android:name=".SolveDispute"></activity>
+            tools:replace="screenOrientation"/>
+        <activity
+            android:name=".SendFunds"
+            android:configChanges="orientation|keyboardHidden"
+            android:label="Send Funds"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".SolveDispute"
+            android:configChanges="orientation|keyboardHidden"
+            android:label="Solve Dispute"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>
