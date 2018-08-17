@@ -44,8 +44,8 @@ public class Web3Activity extends AppCompatActivity {
             carrierAddr = SharedPref.getString("carrier", "");
 
             myCred = Credentials.create(myKey);
-            gasPrice = Convert.toWei("0.00000001", Convert.Unit.ETHER).toBigInteger();
-            gasLimit = new BigInteger("4999999");
+            gasPrice = new BigInteger(getResources().getString(R.string.gasPrice));
+            gasLimit = new BigInteger(getResources().getString(R.string.gasLimit));
             web3 = Web3jFactory.build(new HttpService(getResources().getString(R.string.web3HostRopsten)));
             //EthBlock lastBlock = web3.ethGetBlockByNumber(DefaultBlockParameterName.LATEST, false).send();
             //List<EthBlock.TransactionResult> tranList = lastBlock.getBlock().getTransactions();

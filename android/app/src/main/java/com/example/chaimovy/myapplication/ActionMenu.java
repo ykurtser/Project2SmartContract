@@ -25,11 +25,7 @@ public class ActionMenu extends AppCompatActivity {
         Button signPkgBt =(Button) findViewById(R.id.signPkgBt);
         Button openDispBt = (Button)findViewById(R.id.openDispBt);
         Button returnPkgBt = (Button)findViewById(R.id.returnPkgBt);
-        if (getIntent().hasExtra("address") &&getIntent().hasExtra("key"))
-        {
-            address=getIntent().getExtras().getString("address");
-            key=getIntent().getExtras().getString("key");
-        }
+
 
         createPkgBt.setOnClickListener(new View.OnClickListener() {
 
@@ -37,8 +33,6 @@ public class ActionMenu extends AppCompatActivity {
             public void onClick(View v) {
 
                 Intent I = new Intent(getApplicationContext(), CreatePackage.class);
-                I.putExtra("address", address);
-                I.putExtra("key", key);
                 startActivity(I);
 
             }
@@ -50,8 +44,6 @@ public class ActionMenu extends AppCompatActivity {
             public void onClick(View v) {
 
                 Intent I = new Intent(getApplicationContext(), MyPackages.class);
-                I.putExtra("address", address);
-                I.putExtra("key", key);
                 startActivity(I);
 
             }
@@ -63,8 +55,6 @@ public class ActionMenu extends AppCompatActivity {
             public void onClick(View v) {
 
                 Intent I = new Intent(getApplicationContext(), SignPackage.class);
-                I.putExtra("address", address);
-                I.putExtra("key", key);
                 startActivity(I);
 
             }
@@ -77,8 +67,6 @@ public class ActionMenu extends AppCompatActivity {
             public void onClick(View v) {
 
                 Intent I = new Intent(getApplicationContext(), OpenDispute.class);
-                I.putExtra("address", address);
-                I.putExtra("key", key);
                 startActivity(I);
 
             }
@@ -90,8 +78,6 @@ public class ActionMenu extends AppCompatActivity {
             public void onClick(View v) {
 
                 Intent I = new Intent(getApplicationContext(), ReturnPackage.class);
-                I.putExtra("address", address);
-                I.putExtra("key", key);
                 startActivity(I);
 
             }
