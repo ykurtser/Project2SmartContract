@@ -9,7 +9,7 @@ contract P2Package {
 	address carrier;
 	address buyer;
 	address disputeResolver;
-  address packageManger;
+    address packageManger;
 	uint merchValue;           //merchandise value [wei]
 	uint shippingFee;          //shipping fee [wei]
 	uint ammountBuyer;         //current ammount payed by buyer [wei]
@@ -349,6 +349,14 @@ contract P2Package {
     returns(string[])
     {
         return (trajectory);
+    }
+
+    function getTrajectorySize()
+    public
+    view
+    returns(uint)
+    {
+        return numOfSig;
     }
 
     function getTrajectoryI(uint i)
