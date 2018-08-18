@@ -6,6 +6,7 @@ package com.example.chaimovy.myapplication;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -20,6 +21,7 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
 import org.w3c.dom.Text;
+import org.web3j.protocol.core.methods.response.TransactionReceipt;
 
 public class SignPackage extends Web3Activity {
 
@@ -55,33 +57,7 @@ public class SignPackage extends Web3Activity {
         signPkgBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                try{
-                    P2Package pkg = P2Package.load(pkgAddrText.getText().toString(),web3,myCred,gasPrice,gasLimit);
-                    int pkgState = pkg.getState().send().intValue();
-                    if (pkgState != 1 && pkgState != 2){
-                        Toast.makeText(getBaseContext(), "Package is in state: " + P2Package.getStateString(pkgState) + ". Cant sign Pkg.", Toast.LENGTH_LONG).show();
-                        return;
-                    }
-                    if (whoAmI.equals("BuyerSeller")){
-                        pkg.signPackage(locationText.getText().toString());
-                    }
-                    else {
-                        P2Carrier carrier = P2Carrier.load(carrierAddr,web3,myCred,gasPrice,gasLimit);
-                        if (!carrier.containsStation(myAddr).send().booleanValue()){
-                            Toast.makeText(getBaseContext(), "Your address can't sign pkgs through this carrier", Toast.LENGTH_LONG).show();
-                            return;
-                        }
-                        carrier.signPackage(pkgAddrText.getText().toString(),locationText.getText().toString());
-                    }
-                    debugText.setText("Package signed");
-
-                }
-                catch (Exception e){
-                    debugText.setText("Exception: " + e.getMessage());
-                }
-
-
+                new SignPackageTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
         });
 
@@ -109,5 +85,60 @@ public class SignPackage extends Web3Activity {
                 pkgAddrText.setText(result.getContents());
             }
         }
+    }
+
+
+    class SignPackageTask extends AsyncTask<Void, Void, TransactionReceipt> {
+
+        private View loadingLayout;
+
+        int pkgState;
+        String pkgAddrSt;
+
+        Exception exc;
+
+        @Override
+        protected void onPreExecute() {
+            loadingLayout = findViewById(R.id.loadingLayout);
+            loadingLayout.setVisibility(View.VISIBLE);
+            pkgAddrSt = pkgAddrText.getText().toString();
+        }
+
+        @Override
+        protected TransactionReceipt doInBackground(Void... voids) {
+            try{
+                P2Package pkg = P2Package.load(pkgAddrSt,web3,myCred,gasPrice,gasLimit);
+                pkgState = pkg.getState().send().intValue();
+                if (pkgState != 1 && pkgState != 2){
+                    throw new Exception("Package is in state: " + P2Package.getStateString(pkgState) + ". Cant sign Pkg.");
+                }
+                if (whoAmI.equals("BuyerSeller")){
+                    pkg.signPackage(locationText.getText().toString());
+                }
+                else {
+                    P2Carrier carrier = P2Carrier.load(carrierAddr,web3,myCred,gasPrice,gasLimit);
+                    if (!carrier.containsStation(myAddr).send().booleanValue()){
+                        throw new Exception("Your address can't sign pkgs through this carrier");
+                    }
+                    carrier.signPackage(pkgAddrSt,locationText.getText().toString());
+                }
+            }
+            catch (Exception e){
+                exc = e;
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(TransactionReceipt txRecp) {
+            loadingLayout.setVisibility(View.GONE);
+            if (exc!=null) {
+                debugText.setText(exc.getMessage());
+            }
+            else {
+                debugText.setText("Package signed");
+            }
+        }
+
     }
 }

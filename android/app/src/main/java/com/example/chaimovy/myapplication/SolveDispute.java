@@ -1,6 +1,7 @@
 package com.example.chaimovy.myapplication;
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -9,6 +10,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import org.web3j.protocol.core.methods.response.TransactionReceipt;
 
 import java.math.BigInteger;
 
@@ -53,33 +56,7 @@ public class SolveDispute extends Web3Activity {
         resolveBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try{
-                    P2Package pkg = P2Package.load(addrTxt.getText().toString(),web3,myCred,gasPrice,gasLimit);
-
-                    String dispResolverAddr = pkg.getDisputeResolver().send();
-                    if (!dispResolverAddr.equals(myAddr)){
-                        debugTxt.setText("You are not set as the dispute resolver fot this package");
-                        return;
-                    }
-
-                    int pkgState = pkg.getState().send().intValue();
-                    if (pkgState != 3) {
-                        debugTxt.setText("Package is not under dispute, its state is: \n" + P2Package.getStateString(pkgState));
-                        return;
-                    }
-
-                    BigInteger sellersCut = new BigInteger(sellerCutTxt.getText().toString());
-                    if (sellersCut.intValue() < 0 || sellersCut.intValue() > 100){
-                        debugTxt.setText("The cut must be in range [0-100] fix it and try again");
-                        return;
-                    }
-
-                    pkg.resolveDispute(sellersCut).sendAsync();
-
-                }
-                catch (Exception e){
-                    debugTxt.setText("Oops, something went wrong:\n" + e.getMessage());
-                }
+                new SolveDisputeTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
         });
 
@@ -94,5 +71,66 @@ public class SolveDispute extends Web3Activity {
         debugTxt = (TextView) findViewById(R.id.resolveDisputeDebugText);
         sellerCutTxt = (EditText) findViewById(R.id.resolveDisputeSellerCut);
         resolveBt = (Button) findViewById(R.id.resolveDisputeBt);
+    }
+
+    class SolveDisputeTask extends AsyncTask<Void, Void, TransactionReceipt> {
+
+        private View loadingLayout;
+
+        String pkgAddrSt;
+
+        Exception exc;
+
+        @Override
+        protected void onPreExecute() {
+            loadingLayout = findViewById(R.id.loadingLayout);
+            loadingLayout.setVisibility(View.VISIBLE);
+            pkgAddrSt = addrTxt.getText().toString();
+        }
+
+        @Override
+        protected TransactionReceipt doInBackground(Void... voids) {
+
+
+            try{
+                P2Package pkg = P2Package.load(pkgAddrSt,web3,myCred,gasPrice,gasLimit);
+
+                String dispResolverAddr = pkg.getDisputeResolver().send();
+                if (!dispResolverAddr.equals(myAddr)){
+                    throw new Exception("You are not set as the dispute resolver fot this package");
+                }
+
+                int pkgState = pkg.getState().send().intValue();
+                if (pkgState != 3) {
+                    throw new Exception("Package is not under dispute, its state is: \n" + P2Package.getStateString(pkgState));
+                }
+
+                BigInteger sellersCut = new BigInteger(sellerCutTxt.getText().toString());
+                if (sellersCut.intValue() < 0 || sellersCut.intValue() > 100){
+                    throw new Exception("The cut must be in range [0-100] fix it and try again");
+                }
+
+                pkg.resolveDispute(sellersCut).send();
+
+            }
+            catch (Exception e){
+                exc = e;
+            }
+            return null;
+
+        }
+
+
+        @Override
+        protected void onPostExecute(TransactionReceipt txRecp) {
+            loadingLayout.setVisibility(View.GONE);
+            if (exc!=null) {
+                debugTxt.setText(exc.getMessage());
+            }
+            else{
+                debugTxt.setText("Funds Transfered");
+            }
+        }
+
     }
 }

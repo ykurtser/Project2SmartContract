@@ -3,7 +3,7 @@ pragma experimental ABIEncoderV2;
 
 
 contract P2Package {
-    enum State {WaitingForStakesIn, Shipped, Returned, UnderDispute}
+    enum State {WaitingForStakesIn, Shipped, Returned, UnderDispute, Finished}
     State  state;
 	address seller;
 	address carrier;
@@ -106,6 +106,17 @@ contract P2Package {
     {
         state = State(uint(state) + 1);
         emit changedState(uint(state));
+
+    }
+
+    /********************************************************************************************************************************
+    * modifies: this
+    * effects: move to State Done
+    *********************************************************************************************************************************/
+    function changeStateDone() private
+    {
+        state = State.Finished;
+        emit changedState(uint(state));
     }
 
     /********************************************************************************************************************************
@@ -138,7 +149,7 @@ contract P2Package {
   *********************************************************************************************************************************/
 	function returnPackage(string reason) public atState(State.Shipped){
 	    require(msg.sender == buyer);
-	    trajectory[numOfSig]  = reason; //todo: manage history of trajectory in array of strings
+	    trajectory[numOfSig]  = reason;
 	    numOfSig++;
 	    changeState();
 	    buyer.transfer(merchValue);
@@ -153,40 +164,51 @@ contract P2Package {
   function openDispute() public atState(State.Returned) {
     require(msg.sender == carrier);
     changeState();
-    //todo: think of what message we actualy send  to disputeResolver
-
   }
   /********************************************************************************************************************************
   * modifies: this, a transaction, changes blockchain state
-  * effects: tranfer sellers cut to seller, (1-sellersCut) to carrier, then self destruct
+  * effects: self destruct
+  *********************************************************************************************************************************/
+  function killMe() public atState(State.Finished) {
+      selfdestruct(packageManger);
+  }
+
+  /********************************************************************************************************************************
+  * modifies: this, a transaction, changes blockchain state
+  * effects: tranfer sellers cut to seller, (1-sellersCut) to carrier, then change state to done
   *********************************************************************************************************************************/
  function resolveDispute(uint sellersCut) public atState(State.UnderDispute){
    require(msg.sender == disputeResolver);
    seller.transfer(uint(( getDisputeFullAmmount() * sellersCut)/100));
    carrier.transfer(uint(( getDisputeFullAmmount() * (100-sellersCut))/100));
-   selfdestruct(packageManger);
-
+   trajectory[numOfSig]  = "Contract wasn't activated";
+   numOfSig++;
+   changeStateDone();
  }
  /********************************************************************************************************************************
  * modifies: this, a transaction, changes blockchain state
- * effects: transfer the agreed ammounts to seller and carrier, then self destruct
+ * effects: transfer the agreed ammounts to seller and carrier, then change state to done
  *********************************************************************************************************************************/
  function terminateNormal() private atState(State.Shipped){
-   seller.transfer(merchValue+shippingFee);
+   seller.transfer(merchValue+2*shippingFee);
    carrier.transfer(merchValue+2*shippingFee);
-   selfdestruct(packageManger);
+   trajectory[numOfSig]  = "Package delivered";
+   numOfSig++;
+   changeStateDone();
  }
  /********************************************************************************************************************************
  * modifies: this, a transaction, changes blockchain state
- * effects: transfer the deposits carrier, then self destruct
+ * effects: transfer the deposits carrier, then change state to done
  *********************************************************************************************************************************/
  function terminateReturned() private atState(State.Returned){
    carrier.transfer(merchValue+3*shippingFee);
-   selfdestruct(packageManger);
+   trajectory[numOfSig]  = "Package Returned";
+   numOfSig++;
+   changeStateDone();
  }
  /********************************************************************************************************************************
  * modifies: this, a transaction, changes blockchain state
- * effects: transfer all parties ammounts paid, then self destruct
+ * effects: transfer all parties ammounts paid, then change state to done
  *********************************************************************************************************************************/
  function terminateNotShipped() private atState(State.WaitingForStakesIn){
    if (ammountCarrier>0)
@@ -201,24 +223,31 @@ contract P2Package {
    {
       seller.transfer(ammountSeller);
    }
-   selfdestruct(packageManger);
+   trajectory[numOfSig]  = "Contract wasn't activated";
+   numOfSig++;
+   changeStateDone();
  }
  /********************************************************************************************************************************
  * modifies: this, a transaction, changes blockchain state
- * effects: transfer refund to buyer, deposits to seller, then self destruct
+ * effects: transfer refund to buyer, deposits to seller, then change state to done
  *********************************************************************************************************************************/
  function terminateLost() private atState(State.Shipped){
    buyer.transfer(ammountBuyer);
    seller.transfer(ammountCarrier+ammountSeller);
-   selfdestruct(packageManger);
+   trajectory[numOfSig]  = "Delivery timed out";
+   numOfSig++;
+   changeStateDone();
  }
  /********************************************************************************************************************************
  * modifies: this, a transaction, changes blockchain state
- * effects: transfer the agreed ammounts to carrier, then self destruct
+ * effects: transfer the agreed ammounts to carrier, then change state to done
  *********************************************************************************************************************************/
  function terminateOnReturn() private atState(State.Returned){
-   carrier.transfer(ammountCarrier+ammountSeller);
-   selfdestruct(packageManger);
+   buyer.transfer(shippingFee);
+   seller.transfer(merchValue+2*shippingFee);
+   trajectory[numOfSig]  = "Contract wasn't activated";
+   numOfSig++;
+   changeStateDone();
  }
 
  ////////// Getters ///////////

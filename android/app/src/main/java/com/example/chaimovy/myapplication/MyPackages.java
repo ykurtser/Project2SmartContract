@@ -84,46 +84,7 @@ public class MyPackages extends Web3Activity {
             addPkgBt.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    String pkgAddress = pkgNumber.getText().toString();
-
-                    try {
-                        P2Package pkg = P2Package.load(pkgAddress, web3, myCred, gasPrice, gasLimit);
-
-                        SharedPreferences.Editor pkgInfoEditor = getSharedPreferences(pkgAddress, Context.MODE_PRIVATE).edit();
-
-                        String sellerAddr = pkg.getSeller().send();
-                        String carrierAddr = pkg.getCarrier().send();
-                        String buyerAddr = pkg.getBuyer().send();
-                        String dispResolvAddr = pkg.getDisputeResolver().send();
-                        String shippingFee = pkg.getShippingFee().send().toString();
-                        String merchVal = pkg.getMerchVal().send().toString();
-
-                        if (sellerAddr.equals("") || carrierAddr.equals("") || buyerAddr.equals("") || dispResolvAddr.equals("") || shippingFee.equals("") || merchVal.equals("") ){
-                            throw new Exception();
-                        }
-                        pkgInfoEditor.putString("sellerAddr", sellerAddr);
-                        pkgInfoEditor.putString("carrierAddr", carrierAddr);
-                        pkgInfoEditor.putString("buyerAddr", buyerAddr);
-                        pkgInfoEditor.putString("dispResolvAddr", dispResolvAddr);
-                        pkgInfoEditor.putString("shippingFee", shippingFee);
-                        pkgInfoEditor.putString("merchVal", merchVal);
-                        pkgInfoEditor.apply();
-
-                        SharedPreferences SharedPrefPkgs = getSharedPreferences("pkgTrek", Context.MODE_PRIVATE);
-                        SharedPreferences.Editor pkgsEditor = SharedPrefPkgs.edit();
-
-                        Set<String> pkgs = new HashSet<>();
-                        if (SharedPrefPkgs.getStringSet(myAddr, pkgs) != null) pkgs = SharedPrefPkgs.getStringSet(myAddr, pkgs);
-                        pkgs.add(pkgAddress);
-                        pkgsEditor.putStringSet(myAddr, pkgs);
-                        pkgsEditor.apply();
-                        fillSpinner();
-                    } catch (Error e) {
-                        Toast.makeText(getBaseContext(), "couldn't load pkg with that addr", Toast.LENGTH_LONG).show();
-                    }
-                    catch ( Exception e) {
-                        Toast.makeText(getBaseContext(), "couldn't load pkg with that addr", Toast.LENGTH_LONG).show();
-                    }
+                    new AddPackageTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 }
             });
 
@@ -160,6 +121,18 @@ public class MyPackages extends Web3Activity {
 
     }
 
+    protected void fillSpinner() {
+        SharedPreferences SharedPref = getSharedPreferences("pkgTrek", Context.MODE_PRIVATE);
+
+        Set<String> pkgs = new HashSet<>();
+        pkgs = SharedPref.getStringSet(myAddr, pkgs);
+
+
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, pkgs.toArray());
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        pkgsSpinner.setAdapter(dataAdapter);
+
+    }
 
     class ShowPkgTask extends AsyncTask<Void, Void, Void> {
 
@@ -271,16 +244,86 @@ public class MyPackages extends Web3Activity {
     }
 
 
-    protected void fillSpinner() {
-        SharedPreferences SharedPref = getSharedPreferences("pkgTrek", Context.MODE_PRIVATE);
+    class AddPackageTask extends AsyncTask<Void, Void, TransactionReceipt> {
 
-        Set<String> pkgs = new HashSet<>();
-        pkgs = SharedPref.getStringSet(myAddr, pkgs);
+        private View loadingLayout;
+
+        String pkgAddress;
+        String sellerAddr;
+        String carrierAddr;
+        String buyerAddr;
+        String dispResolvAddr;
+        String shippingFee;
+        String merchVal;
+
+        Exception exc;
+
+        @Override
+        protected void onPreExecute() {
+            loadingLayout = findViewById(R.id.loadingLayout);
+            loadingLayout.setVisibility(View.VISIBLE);
+
+            pkgAddress = pkgNumber.getText().toString();
+        }
+
+        @Override
+        protected TransactionReceipt doInBackground(Void... voids) {
 
 
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, pkgs.toArray());
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        pkgsSpinner.setAdapter(dataAdapter);
+
+            try {
+                P2Package pkg = P2Package.load(pkgAddress, web3, myCred, gasPrice, gasLimit);
+
+                sellerAddr = pkg.getSeller().send();
+                carrierAddr = pkg.getCarrier().send();
+                buyerAddr = pkg.getBuyer().send();
+                dispResolvAddr = pkg.getDisputeResolver().send();
+                shippingFee = pkg.getShippingFee().send().toString();
+                merchVal = pkg.getMerchVal().send().toString();
+
+            } catch (Error e) {
+                Toast.makeText(getBaseContext(), "couldn't load pkg with that addr", Toast.LENGTH_LONG).show();
+            }
+            catch ( Exception e) {
+                Toast.makeText(getBaseContext(), "couldn't load pkg with that addr", Toast.LENGTH_LONG).show();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(TransactionReceipt txRecp) {
+            loadingLayout.setVisibility(View.GONE);
+
+            try{
+                if (exc != null) throw exc;
+                if (sellerAddr.equals("") || carrierAddr.equals("") || buyerAddr.equals("") || dispResolvAddr.equals("") || shippingFee.equals("") || merchVal.equals("") ){
+                    throw new Exception();
+                }
+
+                SharedPreferences.Editor pkgInfoEditor = getSharedPreferences(pkgAddress, Context.MODE_PRIVATE).edit();
+                pkgInfoEditor.putString("sellerAddr", sellerAddr);
+                pkgInfoEditor.putString("carrierAddr", carrierAddr);
+                pkgInfoEditor.putString("buyerAddr", buyerAddr);
+                pkgInfoEditor.putString("dispResolvAddr", dispResolvAddr);
+                pkgInfoEditor.putString("shippingFee", shippingFee);
+                pkgInfoEditor.putString("merchVal", merchVal);
+                pkgInfoEditor.apply();
+
+                SharedPreferences SharedPrefPkgs = getSharedPreferences("pkgTrek", Context.MODE_PRIVATE);
+                SharedPreferences.Editor pkgsEditor = SharedPrefPkgs.edit();
+
+                Set<String> pkgs = new HashSet<>();
+                if (SharedPrefPkgs.getStringSet(myAddr, pkgs) != null) pkgs = SharedPrefPkgs.getStringSet(myAddr, pkgs);
+                pkgs.add(pkgAddress);
+                pkgsEditor.putStringSet(myAddr, pkgs);
+                pkgsEditor.apply();
+                fillSpinner();
+            }
+            catch (Exception e){
+                Toast.makeText(getBaseContext(), "couldn't load pkg with that addr", Toast.LENGTH_LONG).show();
+            }
+
+        }
 
     }
 

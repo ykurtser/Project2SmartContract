@@ -6,6 +6,7 @@ package com.example.chaimovy.myapplication;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +19,8 @@ import android.widget.Toast;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+
+import org.web3j.protocol.core.methods.response.TransactionReceipt;
 
 
 public class ReturnPackage extends Web3Activity {
@@ -54,29 +57,7 @@ public class ReturnPackage extends Web3Activity {
         returnPkgBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                try{
-                    P2Package pkg = P2Package.load(pkgAddrText.getText().toString(),web3,myCred,gasPrice,gasLimit);
-                    int pkgState = pkg.getState().send().intValue();
-                    if (pkgState != 1){
-                        Toast.makeText(getBaseContext(), "Package is in state: " + P2Package.getStateString(pkgState) + ". Cant return Pkg.", Toast.LENGTH_LONG).show();
-                        return;
-                    }
-                    pkg.returnPackage(reasonText.getText().toString());
-
-                    pkgState = pkg.getState().send().intValue();
-                    if (pkgState != 2){
-                        debugText.setText("Oops, something went wrong, can't return package right now. ");
-                        return;
-                    }
-
-                    debugText.setText("Package State changed to returned");
-                }
-                catch (Exception e){
-                    debugText.setText("Exception: " + e.getMessage());
-                }
-
-
+                new ReturnPackageTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
         });
 
@@ -105,5 +86,59 @@ public class ReturnPackage extends Web3Activity {
                 pkgAddrText.setText(result.getContents());
             }
         }
+    }
+
+    class ReturnPackageTask extends AsyncTask<Void, Void, TransactionReceipt> {
+
+        private View loadingLayout;
+
+        int pkgState;
+        String reasonSt;
+
+        Exception exc;
+
+        @Override
+        protected void onPreExecute() {
+            loadingLayout = findViewById(R.id.loadingLayout);
+            loadingLayout.setVisibility(View.VISIBLE);
+            reasonSt=reasonText.getText().toString();
+        }
+
+        @Override
+        protected TransactionReceipt doInBackground(Void... voids) {
+
+
+            try{
+                P2Package pkg = P2Package.load(pkgAddrText.getText().toString(),web3,myCred,gasPrice,gasLimit);
+                pkgState = pkg.getState().send().intValue();
+                if (pkgState != 1){
+                    throw new Exception("Package is in state: " + P2Package.getStateString(pkgState) + ". Cant return Pkg.");
+                }
+                pkg.returnPackage(reasonSt).send();
+
+                pkgState = pkg.getState().send().intValue();
+                if (pkgState != 2){
+                    throw new Exception("Oops, something went wrong, can't return package right now. ");
+                }
+            }
+            catch (Exception e){
+                exc=e;
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(TransactionReceipt txRecp) {
+            loadingLayout.setVisibility(View.GONE);
+
+            if (exc!=null){
+                debugText.setText(exc.getMessage());
+            }
+            else{
+                debugText.setText("Package State changed to returned");
+            }
+
+        }
+
     }
 }

@@ -3,6 +3,7 @@ package com.example.chaimovy.myapplication;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -78,37 +79,7 @@ public class SendFunds extends Web3Activity {
         sendFunds.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String pkgAddr = addrTxt.getText().toString();
-                BigDecimal ammountEther = new BigDecimal(ammountEtherTxt.getText().toString());
-                try {
-                    if (isCarrier){
-                        P2Carrier carrierCont = P2Carrier.load(carrierAddr,web3,myCred,gasPrice,gasLimit);
-                        if(!carrierCont.getOwner().send().equals(myAddr)){
-                            statusTxt.setText("logged in account is not the contract owner.");
-                            return;
-                        }
-                        TransactionReceipt recp= carrierCont.sendFundsToPackage(pkgAddr,ammountEther.toBigInteger()).send();
-                        recp.getLogs().toString();
-                        recp.getStatus();
-                    }
-                    else {
-                        TransactionReceipt transactionReceipt = Transfer.sendFunds(
-                                web3, myCred, pkgAddr,
-                                ammountEther, Convert.Unit.ETHER).send();
-                        EthGetTransactionCount ethGetTransactionCount = web3.ethGetTransactionCount(
-                                myCred.getAddress(), DefaultBlockParameterName.LATEST).sendAsync().get();
-                        BigInteger nonce = ethGetTransactionCount.getTransactionCount();
-                        RawTransaction rawTransaction  = RawTransaction.createEtherTransaction(
-                                nonce, gasPrice, gasLimit, pkgAddr, ammountEther.toBigInteger());
-                        byte[] signedMessage = TransactionEncoder.signMessage(rawTransaction, myCred);
-                        String hexValue = Numeric.toHexString(signedMessage);
-                        EthSendTransaction ethSendTransaction = web3.ethSendRawTransaction(hexValue).sendAsync().get();
-                    }
-                    statusTxt.setText("Funds Transfered");
-                }
-                catch (Exception e){
-                    statusTxt.setText("Oops, couldn't send funds: " + e.getMessage());
-                }
+                new SendFundsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
         });
         
@@ -120,5 +91,67 @@ public class SendFunds extends Web3Activity {
         statusTxt = (TextView) findViewById(R.id.sendFundStatusText);
         ammountEtherTxt = (EditText) findViewById(R.id.sendFundsAmmountEther);
         sendFunds = (Button) findViewById(R.id.sendFundsBt);
+    }
+
+    class SendFundsTask extends AsyncTask<Void, Void, TransactionReceipt> {
+
+        private View loadingLayout;
+
+        String pkgAddr;
+        BigDecimal ammountEther;
+
+        Exception exc;
+
+        @Override
+        protected void onPreExecute() {
+            loadingLayout = findViewById(R.id.loadingLayout);
+            loadingLayout.setVisibility(View.VISIBLE);
+
+            pkgAddr = addrTxt.getText().toString();
+            ammountEther = new BigDecimal(ammountEtherTxt.getText().toString());
+        }
+
+        @Override
+        protected TransactionReceipt doInBackground(Void... voids) {
+
+
+            try {
+                if (isCarrier){
+                    P2Carrier carrierCont = P2Carrier.load(carrierAddr,web3,myCred,gasPrice,gasLimit);
+                    if(!carrierCont.getOwner().send().equals(myAddr)){
+                        throw new Exception("logged in account is not the contract owner.");
+                    }
+                    carrierCont.sendFundsToPackage(pkgAddr,ammountEther.toBigInteger()).send();
+                }
+                else {
+                    Transfer.sendFunds(web3, myCred, pkgAddr, ammountEther, Convert.Unit.ETHER).send();
+                    EthGetTransactionCount ethGetTransactionCount = web3.ethGetTransactionCount(
+                            myCred.getAddress(), DefaultBlockParameterName.LATEST).sendAsync().get();
+                    BigInteger nonce = ethGetTransactionCount.getTransactionCount();
+                    RawTransaction rawTransaction  = RawTransaction.createEtherTransaction(
+                            nonce, gasPrice, gasLimit, pkgAddr, ammountEther.toBigInteger());
+                    byte[] signedMessage = TransactionEncoder.signMessage(rawTransaction, myCred);
+                    String hexValue = Numeric.toHexString(signedMessage);
+                    web3.ethSendRawTransaction(hexValue).send();
+                }
+
+            }
+            catch (Exception e){
+                statusTxt.setText("Oops, couldn't send funds: " + e.getMessage());
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(TransactionReceipt txRecp) {
+            loadingLayout.setVisibility(View.GONE);
+            if (exc!=null) {
+                statusTxt.setText(exc.getMessage());
+            }
+            else{
+                statusTxt.setText("Funds Transfered");
+            }
+        }
+
     }
 }
