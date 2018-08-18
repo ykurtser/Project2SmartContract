@@ -56,7 +56,7 @@ contract P2Carrier is P2Ownable{
     public
     onlyOwner()
     {
-        pkg.call.value(ammount)();
+        pkg.call.value(ammount).gas(80000)();
     }
     /********************************************************************************************************************************
     * modifies: a transaction, changes blockchain state

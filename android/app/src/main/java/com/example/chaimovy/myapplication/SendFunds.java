@@ -126,7 +126,7 @@ public class SendFunds extends Web3Activity {
                 else {
                     Transfer.sendFunds(web3, myCred, pkgAddr, ammountEther, Convert.Unit.ETHER).send();
                     EthGetTransactionCount ethGetTransactionCount = web3.ethGetTransactionCount(
-                            myCred.getAddress(), DefaultBlockParameterName.LATEST).sendAsync().get();
+                            myCred.getAddress(), DefaultBlockParameterName.LATEST).send();
                     BigInteger nonce = ethGetTransactionCount.getTransactionCount();
                     RawTransaction rawTransaction  = RawTransaction.createEtherTransaction(
                             nonce, gasPrice, gasLimit, pkgAddr, ammountEther.toBigInteger());
@@ -137,7 +137,7 @@ public class SendFunds extends Web3Activity {
 
             }
             catch (Exception e){
-                statusTxt.setText("Oops, couldn't send funds: " + e.getMessage());
+                exc = new Exception("Oops, couldn't send funds: " + e.getMessage());
             }
             return null;
         }
