@@ -117,6 +117,7 @@ public class P2Package extends Contract {
                 Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {}));
         return executeRemoteCallSingleValueReturn(function, BigInteger.class);
     }
+
     public static String getStateString(Integer state) {
         switch (state) {
             case 0:

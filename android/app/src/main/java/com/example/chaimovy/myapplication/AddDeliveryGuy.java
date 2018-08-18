@@ -46,7 +46,7 @@ public class AddDeliveryGuy extends Web3Activity {
                 if (!isManager) return;
                 try{
                     String Carrier2Add = addrTxt.getText().toString();
-                    carrierCompany.addDeliveryStation(Carrier2Add);
+                    carrierCompany.addDeliveryStation(Carrier2Add).send();
                     debugTxt.setText("Carrier " + Carrier2Add + "\nadded");
                 }
                 catch (Exception e){

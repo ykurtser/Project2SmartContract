@@ -101,9 +101,9 @@ public class CreatePackage extends Web3Activity {
                 buyerAddrTxt.setText("0x175A2e653C2bf106Ac1a061f26738A61ADC91C1d");
                 sellerAddrTxt.setText("0xb032FCEf81Ac18844FCE6daCBF1e46FF4dAf0540");
                 dispResAddrTxt.setText("0xc6C787E3a5784155461E643E193f1c72CC355528");
-                carrierAddrTxt.setText("0x37968917CdC7550CF2039cBef47A7F5903fd2bc8");
-                shippigFeeTxt.setText("0.2");
-                merchValueTxt.setText("0.1");
+                carrierAddrTxt.setText("0x2f72F162FE94F312B174ab44e0B91119b52Bd849");
+                shippigFeeTxt.setText("0.01");
+                merchValueTxt.setText("0.05");
                 TO1Txt.setText("2");
                 TO2Txt.setText("3");
             }

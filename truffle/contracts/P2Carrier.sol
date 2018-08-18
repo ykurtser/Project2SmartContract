@@ -56,7 +56,7 @@ contract P2Carrier is P2Ownable{
     public
     onlyOwner()
     {
-        pkg.transfer(ammount);
+        pkg.call.value(ammount).gas(100000)();
     }
     /********************************************************************************************************************************
     * modifies: a transaction, changes blockchain state
@@ -77,7 +77,7 @@ contract P2Carrier is P2Ownable{
     {
         return (owner);
     }
-    
+
     // check if station exist in the autohrized signers set
     function containsStation(address station)
     public

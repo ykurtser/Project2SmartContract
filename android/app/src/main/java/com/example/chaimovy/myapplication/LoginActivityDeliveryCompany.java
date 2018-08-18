@@ -103,9 +103,9 @@ public class LoginActivityDeliveryCompany extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                String lastAddr = SharedPrefuserInfo.getString("addr", getResources().getString(R.string.debugAddr));
-                String lastKey = SharedPrefuserInfo.getString("key", getResources().getString(R.string.debugKey));
-                String lastCarrier = SharedPrefuserInfo.getString("carrier", getResources().getString(R.string.debugCarrier));
+                String lastAddr = SharedPrefuserInfo.getString("addr", getResources().getString(R.string.debugAddrCarrierMan));
+                String lastKey = SharedPrefuserInfo.getString("key", getResources().getString(R.string.debugKeyCarrierMan));
+                String lastCarrier = SharedPrefuserInfo.getString("carrier", getResources().getString(R.string.debugCarrierContract));
 
                 CarrierPublicAddrText.setText(lastAddr);
                 privateKeyText.setText(lastKey);
