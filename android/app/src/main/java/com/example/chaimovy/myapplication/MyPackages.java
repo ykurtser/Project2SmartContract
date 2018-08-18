@@ -148,6 +148,7 @@ public class MyPackages extends Web3Activity {
         String SellerLeftToPayEther;
         String BuyerLeftToPayEther;
         String CarrierLeftToPayEther;
+        Set<String> trajSet;
 
 
         Exception exc;
@@ -157,6 +158,8 @@ public class MyPackages extends Web3Activity {
         protected void onPreExecute() {
             loadingLayout = findViewById(R.id.loadingLayout);
             loadingLayout.setVisibility(View.VISIBLE);
+
+            trajSet = new HashSet<>();
 
             if (pkgsSpinner.getSelectedItem() == null){
                 exc = new Exception();
@@ -204,13 +207,10 @@ public class MyPackages extends Web3Activity {
                 BuyerLeftToPayEther = Convert.fromWei(BuyerLeftToPayWei, Convert.Unit.ETHER).toString();
                 CarrierLeftToPayEther = Convert.fromWei(CarrierLeftToPayWei, Convert.Unit.ETHER).toString();
 
-
-                //String traj= pkg.getTrajectoryI(new BigInteger());
-                //if (!traj.isEmpty()) {
-                 //   ArrayAdapter<String> dataAdapter = new ArrayAdapter(getBaseContext(), R.layout.support_simple_spinner_dropdown_item, traj.toArray());
-                 //   dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                 //   pkgsSpinner.setAdapter(dataAdapter);
-                //}
+                Integer trajSize = pkg.getTrajectorySize().send().intValue();
+                for (Integer i=0 ; i<trajSize ; i++) {
+                    trajSet.add( pkg.getTrajectoryI( new BigInteger( i.toString() ) ).send() );
+                }
 
             } catch (Error e) {
                 err = new Error("Delivered");
@@ -238,6 +238,10 @@ public class MyPackages extends Web3Activity {
             pkgBuyerLeftToPay.setText("Buyer to pay: " + BuyerLeftToPayEther + " Ether");
             pkgCarrierLeftToPay.setText("Carrier to pay: " + CarrierLeftToPayEther + " Ether");
             pkgState.setText("Package state: " + State);
+
+            ArrayAdapter<String> dataAdapter = new ArrayAdapter(MyPackages.this, R.layout.support_simple_spinner_dropdown_item, trajSet.toArray());
+            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            pkgTrajectory.setAdapter(dataAdapter);
 
         }
 

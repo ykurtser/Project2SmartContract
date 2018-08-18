@@ -52,11 +52,11 @@ contract P2Carrier is P2Ownable{
     * modifies: a transaction, changes blockchain state
     * effects: tranfer funds to a package
     *********************************************************************************************************************************/
-    function sendFundsToPackage(address pkg, uint ammount)
+    function sendFundsToPackage(P2Package pkg, uint ammount)
     public
     onlyOwner()
     {
-        pkg.call.value(ammount).gas(80000)();
+        pkg.payMe.value(ammount)();
     }
     /********************************************************************************************************************************
     * modifies: a transaction, changes blockchain state

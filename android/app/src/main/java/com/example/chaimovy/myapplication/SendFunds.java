@@ -80,6 +80,35 @@ public class SendFunds extends Web3Activity {
             @Override
             public void onClick(View v) {
                 new SendFundsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                /*
+                try {
+                    /*
+                    BigDecimal ammountWei = Convert.toWei(ammountEtherTxt.getText().toString(), Convert.Unit.ETHER);
+
+                    TransactionReceipt transactionReceipt = Transfer.sendFunds(
+                            web3, myCred, addrTxt.getText().toString(),
+                            ammountWei, Convert.Unit.ETHER).send();
+
+
+                    //Build raw transaction
+
+                    EthGetTransactionCount ethGetTransactionCount = web3.ethGetTransactionCount(
+                            myCred.getAddress(), DefaultBlockParameterName.LATEST).sendAsync().get();
+                    BigInteger nonce = ethGetTransactionCount.getTransactionCount();
+                    RawTransaction rawTransaction  = RawTransaction.createEtherTransaction(
+                            nonce, gasPrice, gasLimit, addrTxt.getText().toString(),ammountWei.toBigInteger());
+                    byte[] signedMessage = TransactionEncoder.signMessage(rawTransaction, myCred);
+                    String hexValue = Numeric.toHexString(signedMessage);
+
+                    EthSendTransaction ethSendTransaction = web3.ethSendRawTransaction(hexValue).sendAsync().get();
+
+                    statusTxt.setText("Funds Transfered");
+
+                }
+                catch (Exception e){
+                    statusTxt.setText("Oops, couldn't send funds: " + e.getMessage());
+                }
+                */
             }
         });
         
@@ -98,8 +127,8 @@ public class SendFunds extends Web3Activity {
         private View loadingLayout;
 
         String pkgAddr;
-        BigDecimal ammountEther;
-
+        BigDecimal ammountWei;
+        EthSendTransaction tx;
         Exception exc;
 
         @Override
@@ -108,7 +137,8 @@ public class SendFunds extends Web3Activity {
             loadingLayout.setVisibility(View.VISIBLE);
 
             pkgAddr = addrTxt.getText().toString();
-            ammountEther = new BigDecimal(ammountEtherTxt.getText().toString());
+            ammountWei = Convert.toWei(ammountEtherTxt.getText().toString(), Convert.Unit.ETHER);
+
         }
 
         @Override
@@ -121,23 +151,26 @@ public class SendFunds extends Web3Activity {
                     if(!carrierCont.getOwner().send().equals(myAddr)){
                         throw new Exception("logged in account is not the contract owner.");
                     }
-                    carrierCont.sendFundsToPackage(pkgAddr,ammountEther.toBigInteger()).send();
+                    carrierCont.sendFundsToPackage(pkgAddr,ammountWei.toBigInteger()).send();
                 }
                 else {
-                    Transfer.sendFunds(web3, myCred, pkgAddr, ammountEther, Convert.Unit.ETHER).send();
+
                     EthGetTransactionCount ethGetTransactionCount = web3.ethGetTransactionCount(
-                            myCred.getAddress(), DefaultBlockParameterName.LATEST).send();
+                            myAddr, DefaultBlockParameterName.LATEST).send();
                     BigInteger nonce = ethGetTransactionCount.getTransactionCount();
                     RawTransaction rawTransaction  = RawTransaction.createEtherTransaction(
-                            nonce, gasPrice, gasLimit, pkgAddr, ammountEther.toBigInteger());
+                            nonce, gasPrice, gasLimit, pkgAddr,ammountWei.toBigInteger());
                     byte[] signedMessage = TransactionEncoder.signMessage(rawTransaction, myCred);
                     String hexValue = Numeric.toHexString(signedMessage);
-                    web3.ethSendRawTransaction(hexValue).send();
+                    tx = web3.ethSendRawTransaction(hexValue).send();
                 }
 
             }
             catch (Exception e){
                 exc = new Exception("Oops, couldn't send funds: " + e.getMessage());
+            }
+            catch (Error r){
+                exc = new Exception(exc.getMessage());
             }
             return null;
         }
@@ -149,7 +182,11 @@ public class SendFunds extends Web3Activity {
                 statusTxt.setText(exc.getMessage());
             }
             else{
-                statusTxt.setText("Funds Transfered");
+                String toPrint="";
+                if (tx!=null){
+                    toPrint = "has error: " + tx.hasError() +  "\ntx result: " + tx.getResult() +"\nsent value: " +ammountWei.toString();
+                }
+                statusTxt.setText("tx info: has error:" + toPrint);
             }
         }
 

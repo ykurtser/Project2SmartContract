@@ -129,6 +129,17 @@ contract P2Package {
 	    if (ammountBuyer >= getBuyerStake() && ammountSeller >= getSellerStake() && ammountCarrier >= getCarrierStake() && state == State.WaitingForStakesIn)
 	        changeState();
 	}
+
+    /********************************************************************************************************************************
+    * modifies: this
+    * effects: recieve ether, resolvePayment, change state if all stakes paid
+    *********************************************************************************************************************************/
+    function payMe() public payable {
+        resolvePayment(msg.sender);
+        //check if everybody paid, package ready for shipping
+        if (ammountBuyer >= getBuyerStake() && ammountSeller >= getSellerStake() && ammountCarrier >= getCarrierStake() && state == State.WaitingForStakesIn)
+            changeState();
+    }
   /********************************************************************************************************************************
   * modifies: this, a transaction, changes blockchain state
   * effects: if message sender  is buyer, terminateNormal(), if message sender  is seller, terminateReturned(), update packegae trajectory
