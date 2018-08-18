@@ -20,7 +20,8 @@ module.exports = {
           provider: function() {
             return new HDWalletProvider(mnemonic, "https://ropsten.infura.io/06KZcq3hzQMYyXUurR9q")
           },
-          network_id: 3
+          network_id: 3,
+          gas: 4600000
       },
     rinkeby: {
         provider: function() {
