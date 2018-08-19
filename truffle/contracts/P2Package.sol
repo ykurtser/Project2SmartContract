@@ -144,8 +144,8 @@ contract P2Package {
   * modifies: this, a transaction, changes blockchain state
   * effects: if message sender  is buyer, terminateNormal(), if message sender  is seller, terminateReturned(), update packegae trajectory
   *********************************************************************************************************************************/
-	function signPackage(string location) public timedTransitions() { //TODO MAKE CONDITIONS MORE READABLE
-	    require( state == State.Shipped && (msg.sender == carrier || msg.sender==buyer) || state == State.Returned && (msg.sender == carrier || msg.sender==seller));
+	function signPackage(string location) public { //TODO MAKE CONDITIONS MORE READABLE
+//	    require( state == State.Shipped && (msg.sender == carrier || msg.sender==buyer) || state == State.Returned && (msg.sender == carrier || msg.sender==seller));
         if (msg.sender == seller)
             terminateReturned();
         if (msg.sender == buyer)

@@ -70,7 +70,7 @@ public class SendFunds extends Web3Activity {
 
             String balanceW = ethGetBalance.getBalance().toString();
             String balanceE = Convert.fromWei(balanceW,Convert.Unit.ETHER).toString();
-            accountDetailsTxt.setText(toPrint + myAddr + "\nBalance [ETHER]: \n" + balanceE);
+            accountDetailsTxt.setText(toPrint + balanceAddr + "\nBalance [ETHER]: \n" + balanceE);
         } catch (Exception e){
             accountDetailsTxt.setText("Couldn't get account balance");
         }
@@ -186,7 +186,7 @@ public class SendFunds extends Web3Activity {
                 if (tx!=null){
                     toPrint = "has error: " + tx.hasError() +  "\ntx result: " + tx.getResult() +"\nsent value: " +ammountWei.toString();
                 }
-                statusTxt.setText("tx info: has error:" + toPrint);
+                statusTxt.setText("funds transfered " + toPrint);
             }
         }
 

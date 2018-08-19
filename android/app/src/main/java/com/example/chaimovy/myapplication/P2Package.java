@@ -130,9 +130,11 @@ public class P2Package extends Contract {
             case 1:
                 return "On the way to buyer";
             case 2:
-                return "on the way back to seller";
+                return "On the way back to seller";
             case 3:
-                return "under dispute";
+                return "Under dispute";
+            case 4:
+                return "Done";
         }
         return "";
     }

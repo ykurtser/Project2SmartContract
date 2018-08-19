@@ -21,6 +21,8 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
 import org.w3c.dom.Text;
+import org.web3j.protocol.core.Response;
+import org.web3j.protocol.core.methods.response.EthSendTransaction;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 
 public class SignPackage extends Web3Activity {
@@ -94,6 +96,8 @@ public class SignPackage extends Web3Activity {
 
         int pkgState;
         String pkgAddrSt;
+        String locationSt;
+        String toPrint="";
 
         Exception exc;
 
@@ -102,6 +106,7 @@ public class SignPackage extends Web3Activity {
             loadingLayout = findViewById(R.id.loadingLayout);
             loadingLayout.setVisibility(View.VISIBLE);
             pkgAddrSt = pkgAddrText.getText().toString();
+            locationSt = locationText.getText().toString();
         }
 
         @Override
@@ -113,14 +118,19 @@ public class SignPackage extends Web3Activity {
                     throw new Exception("Package is in state: " + P2Package.getStateString(pkgState) + ". Cant sign Pkg.");
                 }
                 if (whoAmI.equals("BuyerSeller")){
-                    pkg.signPackage(locationText.getText().toString());
+                    pkg.signPackage(locationSt).send();
                 }
                 else {
                     P2Carrier carrier = P2Carrier.load(carrierAddr,web3,myCred,gasPrice,gasLimit);
                     if (!carrier.containsStation(myAddr).send().booleanValue()){
                         throw new Exception("Your address can't sign pkgs through this carrier");
                     }
-                    carrier.signPackage(pkgAddrSt,locationText.getText().toString());
+                    TransactionReceipt txr= carrier.signPackage(pkgAddrSt,locationSt).send();
+                    if (!carrier.getPackageSignedEvents(txr).isEmpty()) {
+                        P2Carrier.PackageSignedEventResponse eventR = carrier.getPackageSignedEvents(txr).get(0);
+                        toPrint = "got event: package signed, location: " + eventR.location + "\n in package addr: " + eventR.pkg + "\n signer is: " + eventR.signer;
+                    }
+                    toPrint = txr.getStatus();
                 }
             }
             catch (Exception e){
@@ -136,7 +146,7 @@ public class SignPackage extends Web3Activity {
                 debugText.setText(exc.getMessage());
             }
             else {
-                debugText.setText("Package signed");
+                debugText.setText("Package signed " + toPrint);
             }
         }
 

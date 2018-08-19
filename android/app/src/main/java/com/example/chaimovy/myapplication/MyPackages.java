@@ -21,6 +21,7 @@ import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.utils.Convert;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -148,7 +149,7 @@ public class MyPackages extends Web3Activity {
         String SellerLeftToPayEther;
         String BuyerLeftToPayEther;
         String CarrierLeftToPayEther;
-        Set<String> trajSet;
+        ArrayList<String> trajArr;
 
 
         Exception exc;
@@ -159,7 +160,7 @@ public class MyPackages extends Web3Activity {
             loadingLayout = findViewById(R.id.loadingLayout);
             loadingLayout.setVisibility(View.VISIBLE);
 
-            trajSet = new HashSet<>();
+            trajArr = new ArrayList<>();
 
             if (pkgsSpinner.getSelectedItem() == null){
                 exc = new Exception();
@@ -209,7 +210,7 @@ public class MyPackages extends Web3Activity {
 
                 Integer trajSize = pkg.getTrajectorySize().send().intValue();
                 for (Integer i=0 ; i<trajSize ; i++) {
-                    trajSet.add( pkg.getTrajectoryI( new BigInteger( i.toString() ) ).send() );
+                    trajArr.add(pkg.getTrajectoryI( new BigInteger( i.toString() ) ).send());
                 }
 
             } catch (Error e) {
@@ -239,7 +240,7 @@ public class MyPackages extends Web3Activity {
             pkgCarrierLeftToPay.setText("Carrier to pay: " + CarrierLeftToPayEther + " Ether");
             pkgState.setText("Package state: " + State);
 
-            ArrayAdapter<String> dataAdapter = new ArrayAdapter(MyPackages.this, R.layout.support_simple_spinner_dropdown_item, trajSet.toArray());
+            ArrayAdapter<String> dataAdapter = new ArrayAdapter(MyPackages.this, R.layout.support_simple_spinner_dropdown_item, trajArr.toArray());
             dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             pkgTrajectory.setAdapter(dataAdapter);
 
