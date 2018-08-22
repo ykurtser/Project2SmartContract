@@ -27,6 +27,8 @@ import org.web3j.protocol.core.methods.response.TransactionReceipt;
 
 public class SignPackage extends Web3Activity {
 
+    private static final String TAG = "DeliveryApp";
+
     Button scanQrBt, signPkgBt;
     private AutoCompleteTextView pkgAddrText;
     TextView locationText,debugText;
@@ -118,7 +120,7 @@ public class SignPackage extends Web3Activity {
                     throw new Exception("Package is in state: " + P2Package.getStateString(pkgState) + ". Cant sign Pkg.");
                 }
                 if (whoAmI.equals("BuyerSeller")){
-                    pkg.signPackage(locationSt).send();
+                    return pkg.signPackage(locationSt).send();
                 }
                 else {
                     P2Carrier carrier = P2Carrier.load(carrierAddr,web3,myCred,gasPrice,gasLimit);
@@ -131,6 +133,7 @@ public class SignPackage extends Web3Activity {
                         toPrint = "got event: package signed, location: " + eventR.location + "\n in package addr: " + eventR.pkg + "\n signer is: " + eventR.signer;
                     }
                     toPrint = txr.getStatus();
+                    return  txr;
                 }
             }
             catch (Exception e){
@@ -142,6 +145,11 @@ public class SignPackage extends Web3Activity {
         @Override
         protected void onPostExecute(TransactionReceipt txRecp) {
             loadingLayout.setVisibility(View.GONE);
+
+            if (txRecp!=null){
+                Log.i(TAG,"gas for create carrier:\n" + txRecp.getGasUsed().toString() + "\ncumulative gas:" + txRecp.getCumulativeGasUsed().toString());
+            }
+
             if (exc!=null) {
                 debugText.setText(exc.getMessage());
             }

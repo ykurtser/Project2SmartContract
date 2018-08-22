@@ -25,6 +25,8 @@ import org.web3j.protocol.core.methods.response.TransactionReceipt;
 
 public class ReturnPackage extends Web3Activity {
 
+    private static final String TAG = "DeliveryApp";
+
     Button scanQrBt, returnPkgBt;
     private AutoCompleteTextView pkgAddrText;
     TextView reasonText,debugText;
@@ -114,12 +116,15 @@ public class ReturnPackage extends Web3Activity {
                 if (pkgState != 1){
                     throw new Exception("Package is in state: " + P2Package.getStateString(pkgState) + ". Cant return Pkg.");
                 }
-                pkg.returnPackage(reasonSt).send();
+
+                TransactionReceipt retVal = pkg.returnPackage(reasonSt).send();
 
                 pkgState = pkg.getState().send().intValue();
                 if (pkgState != 2){
                     throw new Exception("Oops, something went wrong, can't return package right now. ");
                 }
+
+                return retVal;
             }
             catch (Exception e){
                 exc=e;
@@ -130,6 +135,10 @@ public class ReturnPackage extends Web3Activity {
         @Override
         protected void onPostExecute(TransactionReceipt txRecp) {
             loadingLayout.setVisibility(View.GONE);
+
+            if (txRecp!=null){
+                Log.i(TAG,"gas for create carrier:\n" + txRecp.getGasUsed().toString() + "\ncumulative gas:" + txRecp.getCumulativeGasUsed().toString());
+            }
 
             if (exc!=null){
                 debugText.setText(exc.getMessage());

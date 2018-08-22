@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,6 +21,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class CreatePackage extends Web3Activity {
+
+    private static final String TAG = "DeliveryApp";
 
     EditText buyerAddrTxt;
     EditText sellerAddrTxt;
@@ -180,6 +183,9 @@ public class CreatePackage extends Web3Activity {
             if (txRecp == null) {
                 createdAddr.setText(exc.getMessage());
                 return;
+            }
+            else{
+                Log.i(TAG,"gas for create carrier:\n" + txRecp.getGasUsed().toString() + "\ncumulative gas:" + txRecp.getCumulativeGasUsed().toString());
             }
             if ( pMan.getContractCreatedEvents(txRecp).size()==0 ) {
                 createdAddr.setText("oops, couldn't load created events for recp: " + txRecp.getTransactionHash());

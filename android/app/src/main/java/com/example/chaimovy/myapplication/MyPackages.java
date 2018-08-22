@@ -29,6 +29,8 @@ import java.util.Set;
 
 public class MyPackages extends Web3Activity {
 
+    private static final String TAG = "DeliveryApp";
+
     Spinner pkgsSpinner;
     Spinner pkgTrajectory;
 

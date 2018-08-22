@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -24,11 +25,14 @@ import java.util.Set;
 
 public class AddDeliveryGuy extends Web3Activity {
 
+    private static final String TAG = "DeliveryApp";
+
     Button addCarrierBt;
     TextView debugTxt, addrTxt;
     String managerAddr;
     boolean isManager = false;
     P2Carrier carrierCompany;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,17 +88,20 @@ public class AddDeliveryGuy extends Web3Activity {
         protected TransactionReceipt doInBackground(Void... voids) {
 
             try {
-                carrierCompany.addDeliveryStation(Carrier2Add).send();
+                return carrierCompany.addDeliveryStation(Carrier2Add).send();
             } catch (Exception e) {
                 exc = e;
                 return null;
             }
-            return null;
         }
 
         @Override
         protected void onPostExecute(TransactionReceipt txRecp) {
             loadingLayout.setVisibility(View.GONE);
+
+            if (txRecp!=null){
+                Log.i(TAG,"gas for add delivery station:\n" + txRecp.getGasUsed().toString() + "\ncumulative gas:" + txRecp.getCumulativeGasUsed().toString());
+            }
 
             if (exc != null){
                 debugTxt.setText("Couldn't add Carrier: " + exc.getMessage());

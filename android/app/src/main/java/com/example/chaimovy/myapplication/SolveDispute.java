@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,6 +17,8 @@ import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import java.math.BigInteger;
 
 public class SolveDispute extends Web3Activity {
+
+    private static final String TAG = "DeliveryApp";
 
     TextView addrTxt, carrierCutTxt, debugTxt;
     EditText sellerCutTxt;
@@ -110,7 +113,7 @@ public class SolveDispute extends Web3Activity {
                     throw new Exception("The cut must be in range [0-100] fix it and try again");
                 }
 
-                pkg.resolveDispute(sellersCut).send();
+                return pkg.resolveDispute(sellersCut).send();
 
             }
             catch (Exception e){
@@ -124,6 +127,11 @@ public class SolveDispute extends Web3Activity {
         @Override
         protected void onPostExecute(TransactionReceipt txRecp) {
             loadingLayout.setVisibility(View.GONE);
+
+            if (txRecp!=null){
+                Log.i(TAG,"gas for create carrier:\n" + txRecp.getGasUsed().toString() + "\ncumulative gas:" + txRecp.getCumulativeGasUsed().toString());
+            }
+
             if (exc!=null) {
                 debugTxt.setText(exc.getMessage());
             }

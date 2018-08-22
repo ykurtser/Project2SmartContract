@@ -24,6 +24,8 @@ import org.web3j.protocol.core.methods.response.TransactionReceipt;
 
 public class OpenDispute extends Web3Activity {
 
+    private static final String TAG = "DeliveryApp";
+
     Button scanTQrBt, openDisputeBt;
     TextView debugText, pkgAddrText;
 
@@ -103,8 +105,9 @@ public class OpenDispute extends Web3Activity {
             try{
                 P2Package pkg = P2Package.load(pkgAddrText.getText().toString(),web3,myCred,gasPrice,gasLimit);
 
-                pkg.openDispute().send();
+                TransactionReceipt retVal = pkg.openDispute().send();
                 pkgState = pkg.getState().send().intValue();
+                return retVal;
             }
             catch (Exception e){
                 exc=e;
@@ -115,6 +118,10 @@ public class OpenDispute extends Web3Activity {
         @Override
         protected void onPostExecute(TransactionReceipt txRecp) {
             loadingLayout.setVisibility(View.GONE);
+
+            if (txRecp!=null){
+                Log.i(TAG,"gas for create carrier:\n" + txRecp.getGasUsed().toString() + "\ncumulative gas:" + txRecp.getCumulativeGasUsed().toString());
+            }
 
             if (exc!=null){
                 debugText.setText("Exception: " + exc.getMessage());

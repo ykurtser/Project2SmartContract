@@ -32,6 +32,9 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 public class SendFunds extends Web3Activity {
+
+    private static final String TAG = "DeliveryApp";
+
     TextView addrTxt, statusTxt, accountDetailsTxt;
     EditText ammountEtherTxt;
     Button sendFunds;
