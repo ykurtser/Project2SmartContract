@@ -41,14 +41,14 @@ https://truffleframework.com/docs/truffle/getting-started/running-migrations.
 To deploy project's PackageManager developed by us, run command:
 
                              
-                             truffle migrate –reset –network <network name> 
+                             truffle migrate --reset --network <network name> 
 
-The –reset flag is for a new deployment of the contract, if not used the migrations contract will allow contract to be deployed only once, to avoid ether spending by mistake.
-The –network flag specifies the network contract will be deployed to. Truffle provides a system for managing the compilation and deployment artifacts for each network, and does so in a way that simplifies final application deployment. The network must be configured in ./truffle.js.  the currently configured networks we have used are ganache (on local node), rinkeby and ropsten. For more details go to: https://truffleframework.com/docs/truffle/advanced/networks-and-app-deployment
+The –-reset flag is for a new deployment of the contract, if not used the migrations contract will allow contract to be deployed only once, to avoid ether spending by mistake.
+The -–network flag specifies the network contract will be deployed to. Truffle provides a system for managing the compilation and deployment artifacts for each network, and does so in a way that simplifies final application deployment. The network must be configured in ./truffle.js.  the currently configured networks we have used are ganache (on local node), rinkeby and ropsten. For more details go to: https://truffleframework.com/docs/truffle/advanced/networks-and-app-deployment
 
 For testing, all test files should be located in the ./test directory. Truffle will only run test files with the following file extensions: .js, .es, .es6, and .jsx, and .sol. All other files are ignored. Run command:
 
-                     truffle test .pathToTestFile/testFile.js –network  <network name>
+                     truffle test .pathToTestFile/testFile.js --network  <network name>
  
 https://truffleframework.com/docs/truffle/testing/writing-tests-in-javascript
 ### Android app
