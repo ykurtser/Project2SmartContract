@@ -87,6 +87,9 @@ public class MyPackages extends Web3Activity {
             addPkgBt.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    if (pkgNumber.getText().toString().isEmpty()){
+                        return;
+                    }
                     new AddPackageTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 }
             });
@@ -276,8 +279,6 @@ public class MyPackages extends Web3Activity {
         @Override
         protected TransactionReceipt doInBackground(Void... voids) {
 
-
-
             try {
                 P2Package pkg = P2Package.load(pkgAddress, web3, myCred, gasPrice, gasLimit);
 
@@ -300,6 +301,8 @@ public class MyPackages extends Web3Activity {
         @Override
         protected void onPostExecute(TransactionReceipt txRecp) {
             loadingLayout.setVisibility(View.GONE);
+
+
 
             try{
                 if (exc != null) throw exc;
